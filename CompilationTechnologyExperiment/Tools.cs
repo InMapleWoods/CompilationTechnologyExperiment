@@ -1,4 +1,7 @@
-﻿namespace CompilationTechnologyExperiment
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace CompilationTechnologyExperiment
 {
     /// <summary>
     /// 工具类
@@ -38,6 +41,30 @@
             }
             else
                 return true;
+        }
+
+        /// <summary>
+        /// 是否属于界符或者算符
+        /// </summary>
+        /// <param name="input">输入字符串</param>
+        /// <param name="index">位置索引</param>
+        /// <returns>是否属于算符或界符</returns>
+        public static bool IsBelongToSeparatorsOrOperators(string input,int index)
+        {
+            if (string.IsNullOrEmpty(input))
+                return false;
+            if (index>=input.Length)
+                return false;
+            List<char> op = "+-*%/|&=!><".ToList();
+            List<char> sp = "{}[](),; ".ToList();
+            if (op.Contains(input[index]) || sp.Contains(input[index]))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }
