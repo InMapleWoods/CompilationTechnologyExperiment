@@ -8,9 +8,12 @@ namespace CompilationTechnologyExperiment
     [Serializable]
     public class ErrorException : Exception
     {
-        public ErrorException(string str) : base(str)
+        public ErrorException(string str, string index = "") : base(str)
         {
-            Console.WriteLine(DateTime.Now.ToString() + str);
+            if (!string.IsNullOrEmpty(index))
+                Console.WriteLine(DateTime.Now.ToString() + str + "出错在" + index);
+            else
+                Console.WriteLine(DateTime.Now.ToString() + str);
         }
 
         public ErrorException()

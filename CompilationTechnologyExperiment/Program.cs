@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 
 namespace CompilationTechnologyExperiment
 {
@@ -10,11 +7,17 @@ namespace CompilationTechnologyExperiment
     {
         static void Main(string[] args)
         {
-            var res = FileScanner.ScannerResult(@"C:\Users\96464\Desktop\00.txt");
-            foreach(var i in res)
+            try
             {
-                Console.WriteLine("<" + i.Value + "," + i.Key + ">");
+                Console.WriteLine("请输入代码文件地址");
+                string path = Console.ReadLine();
+                string[] result = FileScanner.ScannerResult(path);
+                File.WriteAllText("Token.txt", result[0]);
+                File.WriteAllText("Symbol.txt", result[1]);
+                File.WriteAllText("Error.txt", result[2]);
+                Console.WriteLine("Token文件和符号表文件已经生成在程序所在目录");
             }
+            catch { }
             Console.Read();
         }
     }

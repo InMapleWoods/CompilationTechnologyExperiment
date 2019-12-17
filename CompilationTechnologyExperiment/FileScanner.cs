@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -11,6 +10,32 @@ namespace CompilationTechnologyExperiment
     /// </summary>
     public static partial class FileScanner
     {
+        private static string error = "";
+        private static int count = 0;
+        /// <summary>
+        /// 获取文件内容并识别
+        /// </summary>
+        /// <param name="fileName">文件名</param>
+        /// <returns>识别结果</returns>
+        public static string[] ScannerResult(string fileName)
+        {
+            count = 0;
+            error = "[";
+            string token = "[]";
+            string symbol = "[]";
+            try
+            {
+                token = GetTokenFile(fileName);
+                symbol = GetSymbolFile(fileName);
+            }
+            catch
+            {
+            }
+            error = error.Substring(0, error.Length - 1);
+            error += "]";
+            return new string[] { token, symbol, error };
+        }
+
         /// <summary>
         /// 获取文件内容
         /// </summary>
@@ -20,25 +45,17 @@ namespace CompilationTechnologyExperiment
         {
             string output = string.Empty;
             string errorMessage = string.Empty;
-            try
+            if (File.Exists(fileName) == true)
             {
-                if (File.Exists(fileName) == true)
+                output = File.ReadAllText(fileName);
+                if (string.IsNullOrEmpty(output))
                 {
-                    output = File.ReadAllText(fileName);
-                    if (string.IsNullOrEmpty(output))
-                    {
-                        throw new ErrorException(ErrorMessageResource.FileEmptyError);
-                    }
-                }
-                else
-                {
-                    throw new ErrorException(ErrorMessageResource.FileNotExist);
+                    throw new ErrorException(ErrorMessageResource.FileEmptyError);
                 }
             }
-            catch (ErrorException e)
+            else
             {
-                Console.WriteLine(e.Message);
-                Console.WriteLine(e.StackTrace);
+                throw new ErrorException(ErrorMessageResource.FileNotExist);
             }
             return output;
         }
@@ -85,32 +102,44 @@ namespace CompilationTechnologyExperiment
             int i = 0;
             do
             {
-                if (Tools.IsSemicolon(input, i))//若字符为一行的开头
+                try
                 {
-                    builder.Clear();
-                    builder.Append(input[i]);
+                    if (!Tools.IsLegal(input, i))
+                    {
+                        i++;
+                        continue;
+                    }
+                    if (Tools.IsSemicolon(input, i))//若字符为一行的开头
+                    {
+                        builder.Clear();
+                        builder.Append(input[i]);
+                        i++;
+                        continue;
+                    }
+                    if (identifyKeywordOrIdentifier(input, ref i, builder, result))
+                    {
+                        continue;
+                    }
+                    if (identifyNumber(input, ref i, builder, result))
+                    {
+                        continue;
+                    }
+                    if (identifyCharacter(input, ref i, builder, result))
+                    {
+                        continue;
+                    }
+                    if (identifyString(input, ref i, builder, result))
+                    {
+                        continue;
+                    }
+                    if (identifyOperatorsOrSeparators(input, ref i, builder, result))
+                    {
+                        continue;
+                    }
+                }
+                catch
+                {
                     i++;
-                    continue;
-                }
-                if (identifyKeywordOrIdentifier(input, ref i, builder, result))
-                {
-                    continue;
-                }
-                if (identifyNumber(input, ref i, builder, result))
-                {
-                    continue;
-                }
-                if (identifyCharacter(input, ref i, builder, result))
-                {
-                    continue;
-                }
-                if (identifyString(input, ref i, builder, result))
-                {
-                    continue;
-                }
-                if (identifyOperatorsOrSeparators(input, ref i, builder, result))
-                {
-                    continue;
                 }
             } while (i < input.Length);
             return result;
@@ -130,11 +159,11 @@ namespace CompilationTechnologyExperiment
             if (char.IsNumber(input[start]))
                 return false;
             bool returnValue = false;
-            while (char.IsLetter(input[index])|| char.IsNumber(input[index]))
+            while (char.IsLetter(input[index]) || char.IsNumber(input[index]))
             {
                 builder.Append(input[index]);
-                if (!char.IsLetter(input[index+1]) && !char.IsNumber(input[index
-                    +1]))
+                if (!char.IsLetter(input[index + 1]) && !char.IsNumber(input[index
+                    + 1]))
                 {
                     string word = builder.ToString();
                     if (Keywords.ContainsKey(word))
@@ -165,17 +194,29 @@ namespace CompilationTechnologyExperiment
         private static bool identifyNumber(string input, ref int index, StringBuilder builder, List<KeyValuePair<string, int>> result)
         {
             bool returnValue = false;
+            bool isDouble = false;
             while (char.IsNumber(input[index]))
             {
-                bool isDouble = false;
                 builder.Append(input[index]);
                 if (!char.IsNumber(input[index + 1]))
                 {
                     if (input[index + 1] == 'e' || input[index + 1] == 'E' || input[index + 1] == '.')
                     {
-                        isDouble = true;
-                        builder.Append(input[index + 1]);
-                        index = index + 2;
+                        if (!isDouble)
+                        {
+                            isDouble = true;
+                            builder.Append(input[index + 1]);
+                            index = index + 1;
+                        }
+                        else
+                        {
+                            index = Tools.MoveToRowEnd(input, index);
+                            string number = builder.ToString();
+                            result.Add(new KeyValuePair<string, int>(number, 35));
+                            builder.Clear();
+                            index = Tools.MoveToRowEnd(input, index);
+                            error += "[" + ErrorMessageResource.NumberMultiDotError + "," + number + "],";
+                        }
                     }
                     else
                     {
@@ -189,10 +230,14 @@ namespace CompilationTechnologyExperiment
                             result.Add(new KeyValuePair<string, int>(number, 35));
                         }
                         builder.Clear();
+                        while (char.IsLetter(input[index + 1]))
+                        {
+                            index++;
+                        }
                         returnValue = true;
-                        index++;
                     }
                 }
+                index++;
             }
             return returnValue;
 
@@ -268,7 +313,7 @@ namespace CompilationTechnologyExperiment
                     if (input[index + 1] == '=')
                     {
                         builder.Append(input[index + 1]);
-                        index = index + 2;
+                        index = index + 1;
                     }
                 }
                 else if (input[index] == '|')
@@ -276,7 +321,7 @@ namespace CompilationTechnologyExperiment
                     if (input[index + 1] == '|')
                     {
                         builder.Append(input[index + 1]);
-                        index = index + 2;
+                        index = index + 1;
 
                     }
                 }
@@ -285,7 +330,7 @@ namespace CompilationTechnologyExperiment
                     if (input[index + 1] == '&')
                     {
                         builder.Append(input[index + 1]);
-                        index = index + 2;
+                        index = index + 1;
 
                     }
                 }
@@ -294,7 +339,7 @@ namespace CompilationTechnologyExperiment
                     if (input[index + 1] == '/')
                     {
                         builder.Append(input[index + 1]);
-                        index = index + 2;
+                        index = index + 1;
 
                     }
                 }
@@ -303,7 +348,7 @@ namespace CompilationTechnologyExperiment
                     if (input[index + 1] == '*')
                     {
                         builder.Append(input[index + 1]);
-                        index = index + 2;
+                        index = index + 1;
 
                     }
                 }
@@ -330,14 +375,63 @@ namespace CompilationTechnologyExperiment
         #endregion
 
         /// <summary>
-        /// 获取文件内容并识别
+        /// 获取符号表文件字符串（JSON格式）
         /// </summary>
         /// <param name="fileName">文件名</param>
-        /// <returns>识别结果</returns>
-
-        public static List<KeyValuePair<string, int>> ScannerResult(string fileName)
+        /// <returns>符号表文件字符串</returns>
+        public static string GetSymbolFile(string fileName)
         {
-            return GetContentKeyValues(ProcessContent(GetFileContent(fileName)));
+            try
+            {
+                var values = GetContentKeyValues(ProcessContent(GetFileContent(fileName)));
+                if (values == null)
+                {
+                    return "";
+                }
+                string str = "[";
+                foreach (var i in values)
+                {
+                    if (i.Value >= 34 && i.Value <= 37)
+                    {
+                        str += "[" + Tools.GetSymbolType(i.Value) + "," + i.Key + "],";
+                    }
+                }
+                str = str.Substring(0, str.Length - 1);
+                str += "]";
+                return str;
+            }
+            catch (ErrorException e)
+            {
+                throw;
+            }
+        }
+        /// <summary>
+        /// 获取token文件字符串（JSON格式）
+        /// </summary>
+        /// <param name="fileName">文件名</param>
+        /// <returns>token文件字符串</returns>
+        public static string GetTokenFile(string fileName)
+        {
+            try
+            {
+                var values = GetContentKeyValues(ProcessContent(GetFileContent(fileName)));
+                if (values == null)
+                {
+                    return "";
+                }
+                string str = "[";
+                foreach (var i in values)
+                {
+                    str += "[" + i.Value + "," + i.Key + "],";
+                }
+                str = str.Substring(0, str.Length - 1);
+                str += "]";
+                return str;
+            }
+            catch (ErrorException e)
+            {
+                throw;
+            }
         }
     }
 }

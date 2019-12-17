@@ -77,5 +77,32 @@ namespace CompilationTechnologyExperiment {
                 return ResourceManager.GetString("FileNotExist", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   查找类似 标识符以数字开头 的本地化字符串。
+        /// </summary>
+        internal static string IdStartWithNumber {
+            get {
+                return ResourceManager.GetString("IdStartWithNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 常数中有多个小数点 的本地化字符串。
+        /// </summary>
+        internal static string NumberMultiDotError {
+            get {
+                return ResourceManager.GetString("NumberMultiDotError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 类型不存在 的本地化字符串。
+        /// </summary>
+        internal static string TypeNotFound {
+            get {
+                return ResourceManager.GetString("TypeNotFound", resourceCulture);
+            }
+        }
     }
 }

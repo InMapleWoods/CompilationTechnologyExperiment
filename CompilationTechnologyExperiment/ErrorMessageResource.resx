@@ -123,4 +123,13 @@
   <data name="FileNotExist" xml:space="preserve">
     <value>文件不存在，读取失败</value>
   </data>
+  <data name="IdStartWithNumber" xml:space="preserve">
+    <value>标识符以数字开头</value>
+  </data>
+  <data name="NumberMultiDotError" xml:space="preserve">
+    <value>常数中有多个小数点</value>
+  </data>
+  <data name="TypeNotFound" xml:space="preserve">
+    <value>类型不存在</value>
+  </data>
 </root>
