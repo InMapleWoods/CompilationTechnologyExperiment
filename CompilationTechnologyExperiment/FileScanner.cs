@@ -205,6 +205,7 @@ namespace CompilationTechnologyExperiment
         /// <param name="result">返回结果</param>
         private static bool identifyNumber(string input, ref int index, StringBuilder builder, List<KeyValuePair<string, int>> result)
         {
+            int start = index;
             bool returnValue = false;
             bool isDouble = false;
             while (char.IsNumber(input[index]))
@@ -212,7 +213,31 @@ namespace CompilationTechnologyExperiment
                 builder.Append(input[index]);
                 if (!char.IsNumber(input[index + 1]))
                 {
-                    if (input[index + 1] != 'e' && input[index + 1] != 'E' && input[index + 1] != '.')
+                    if (input[index + 1] == 'e' || input[index + 1] == 'E' || input[index + 1] == '.')
+                    {
+                        if (!isDouble)
+                        {
+                            isDouble = true;
+                            builder.Append(input[index + 1]);
+                            index = index + 1;
+                        }
+                        else
+                        {
+                            string number = builder.ToString();
+                            result.Add(new KeyValuePair<string, int>(number, 35));
+                            builder.Clear();
+                            if (input[index + 1] != '.')
+                            {
+                                error += "[" + ErrorMessageResource.NumberMultiE + "," + number + "],";
+                            }
+                            else
+                            {
+                                error += "[" + ErrorMessageResource.NumberMultiDotError + "," + input.Substring(start, Tools.MoveToRowEnd(input, index) - start) + "],";
+                            }
+                            index = Tools.MoveToRowEnd(input, index) - 1;
+                        }
+                    }
+                    else
                     {
                         string number = builder.ToString();
                         if (!isDouble)
@@ -224,44 +249,12 @@ namespace CompilationTechnologyExperiment
                             result.Add(new KeyValuePair<string, int>(number, 35));
                         }
                         builder.Clear();
+                        if (input[index + 1] != ';')
+                        {
+                            error += "[" + ErrorMessageResource.IdStartWithNumber + "," + input.Substring(start, Tools.MoveToRowEnd(input, index) - start) + "],";
+                        }
                         index = Tools.MoveToRowEnd(input, index) - 1;
                         returnValue = true;
-                    }
-                    if (input[index + 1] == 'e' || input[index + 1] == 'E')
-                    {
-                        if (!isDouble)
-                        {
-                            isDouble = true;
-                            builder.Append(input[index + 1]);
-                            index = index + 1;
-                        }
-                        else
-                        {
-                            index = Tools.MoveToRowEnd(input, index);
-                            string number = builder.ToString();
-                            result.Add(new KeyValuePair<string, int>(number, 35));
-                            builder.Clear();
-                            index = Tools.MoveToRowEnd(input, index);
-                            error += "[" + ErrorMessageResource.NumberMultiE + "," + number + "],";
-                        }
-                    }
-                    if (input[index + 1] == '.')
-                    {
-                        if (!isDouble)
-                        {
-                            isDouble = true;
-                            builder.Append(input[index + 1]);
-                            index = index + 1;
-                        }
-                        else
-                        {
-                            index = Tools.MoveToRowEnd(input, index);
-                            string number = builder.ToString();
-                            result.Add(new KeyValuePair<string, int>(number, 35));
-                            builder.Clear();
-                            index = Tools.MoveToRowEnd(input, index);
-                            error += "[" + ErrorMessageResource.NumberMultiDotError + "," + number + "],";
-                        }
                     }
                 }
                 index++;
@@ -419,25 +412,11 @@ namespace CompilationTechnologyExperiment
                 {
                     if (i != values.Count - 2)
                     {
-                        if (values[i].Value == 1)
+                        if (values[i].Value >= 1 && values[i].Value <= 5)
                         {
                             str += "[" + Tools.GetSymbolType(values[i].Value) + "," + values[i + 1].Key + "],";
-                        }
-                        else if (values[i].Value == 2)
-                        {
-                            str += "[" + Tools.GetSymbolType(values[i].Value) + "," + values[i + 1].Key + "],";
-                        }
-                        else if (values[i].Value == 3)
-                        {
-                            str += "[" + Tools.GetSymbolType(values[i].Value) + "," + values[i + 1].Key + "],";
-                        }
-                        else if (values[i].Value == 4)
-                        {
-                            str += "[" + Tools.GetSymbolType(values[i].Value) + "," + values[i + 1].Key + "],";
-                        }
-                        else if (values[i].Value == 5)
-                        {
-                            str += "[" + Tools.GetSymbolType(values[i].Value) + "," + values[i + 1].Key + "],";
+                            i++;
+                            continue;
                         }
                     }
                     if (values[i].Value >= 34 && values[i].Value <= 37)

@@ -82,7 +82,7 @@ namespace CompilationTechnologyExperiment
             List<char> legalsymbol = ".'\"".ToList();
             List<char> op = "+-*%/|&=!><".ToList();
             List<char> sp = "{}[](),; ".ToList();
-            if (op.Contains(input[index]) || sp.Contains(input[index])|| legalsymbol.Contains(input[index]))
+            if (op.Contains(input[index]) || sp.Contains(input[index]) || legalsymbol.Contains(input[index]))
             {
                 return true;
             }
@@ -110,7 +110,7 @@ namespace CompilationTechnologyExperiment
         {
             if (string.IsNullOrEmpty(input))
                 return 0;
-            while (input[index] != ';')
+            while (char.IsLetterOrDigit(input[index]) || !IsBelongToSeparatorsOrOperators(input, index))
             {
                 if (index >= input.Length - 1)
                     return index;
@@ -129,18 +129,18 @@ namespace CompilationTechnologyExperiment
             string result = "";
             switch (type)
             {
-                case 1: result="整型";break;
-                case 2: result= "浮点型"; break;
-                case 3: result= "字符型"; break;
-                case 4: result= "布尔型"; break;
-                case 5: result= "字符串型"; break;
-                case 14: result= "布尔型"; break;
-                case 15: result= "布尔型"; break;
-                case 34: result="整型";break;
-                case 35: result= "浮点型"; break;
-                case 36: result= "字符型"; break;
-                case 37: result= "字符串型"; break;
-                default: result= "error"; break;
+                case 1: result = "整型"; break;
+                case 2: result = "浮点型"; break;
+                case 3: result = "字符型"; break;
+                case 4: result = "布尔型"; break;
+                case 5: result = "字符串型"; break;
+                case 14: result = "布尔型"; break;
+                case 15: result = "布尔型"; break;
+                case 34: result = "整型"; break;
+                case 35: result = "浮点型"; break;
+                case 36: result = "字符型"; break;
+                case 37: result = "字符串型"; break;
+                default: result = "error"; break;
             }
             if (result == "error")
             {
