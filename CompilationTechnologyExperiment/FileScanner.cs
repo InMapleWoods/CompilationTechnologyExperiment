@@ -25,7 +25,7 @@ namespace CompilationTechnologyExperiment
             string symbol = "[]";
             try
             {
-                var values = GetContentKeyValues(ProcessContent(GetFileContent(fileName)));
+                var values = GetContentKeyValues(ProcessContent(Tools.GetFileContent(fileName)));
                 token = GetTokenFile(values);
                 symbol = GetSymbolFile(values);
             }
@@ -36,30 +36,6 @@ namespace CompilationTechnologyExperiment
             if (!string.IsNullOrEmpty(error))
                 error += "]";
             return new string[] { token, symbol, error };
-        }
-
-        /// <summary>
-        /// 获取文件内容
-        /// </summary>
-        /// <param name="fileName">文件名</param>
-        /// <returns>文件内容</returns>
-        public static string GetFileContent(string fileName)
-        {
-            string output = string.Empty;
-            string errorMessage = string.Empty;
-            if (File.Exists(fileName) == true)
-            {
-                output = File.ReadAllText(fileName);
-                if (string.IsNullOrEmpty(output))
-                {
-                    throw new ErrorException(ErrorMessageResource.FileEmptyError);
-                }
-            }
-            else
-            {
-                throw new ErrorException(ErrorMessageResource.FileNotExist);
-            }
-            return output;
         }
 
         /// <summary>
@@ -183,7 +159,7 @@ namespace CompilationTechnologyExperiment
                         }
                         else
                         {
-                            error += "[" + ErrorMessageResource.IdStartWithNumber + "," + word + "],";
+                            error += "[\"" + ErrorMessageResource.IdStartWithNumber + "\",\"" + word + "\"],";
                             Match match = Regex.Match(word, keyWordPattern);
                             result.Add(new KeyValuePair<string, int>(match.Groups[1].Value.ToString(), 34));
                         }
@@ -228,11 +204,11 @@ namespace CompilationTechnologyExperiment
                             builder.Clear();
                             if (input[index + 1] != '.')
                             {
-                                error += "[" + ErrorMessageResource.NumberMultiE + "," + number + "],";
+                                error += "[\"" + ErrorMessageResource.NumberMultiE + "\",\"" + number + "\"],";
                             }
                             else
                             {
-                                error += "[" + ErrorMessageResource.NumberMultiDotError + "," + input.Substring(start, Tools.MoveToRowEnd(input, index) - start) + "],";
+                                error += "[\"" + ErrorMessageResource.NumberMultiDotError + "\",\"" + input.Substring(start, Tools.MoveToRowEnd(input, index) - start) + "\"],";
                             }
                             index = Tools.MoveToRowEnd(input, index) - 1;
                         }
@@ -251,7 +227,7 @@ namespace CompilationTechnologyExperiment
                         builder.Clear();
                         if (input[index + 1] != ';')
                         {
-                            error += "[" + ErrorMessageResource.IdStartWithNumber + "," + input.Substring(start, Tools.MoveToRowEnd(input, index) - start) + "],";
+                            error += "[\"" + ErrorMessageResource.IdStartWithNumber + "\",\"" + input.Substring(start, Tools.MoveToRowEnd(input, index) - start) + "\"],";
                         }
                         index = Tools.MoveToRowEnd(input, index) - 1;
                         returnValue = true;
@@ -414,18 +390,18 @@ namespace CompilationTechnologyExperiment
                     {
                         if (values[i].Value >= 1 && values[i].Value <= 5)
                         {
-                            str += "[" + Tools.GetSymbolType(values[i].Value) + "," + values[i + 1].Key + "],";
+                            str += "[\"" + Tools.GetSymbolType(values[i].Value) + "\",\"" + values[i].Key + "\"],";
                             i++;
                             continue;
                         }
                     }
                     if (values[i].Value >= 34 && values[i].Value <= 37)
                     {
-                        str += "[" + Tools.GetSymbolType(values[i].Value) + "," + values[i].Key + "],";
+                        str += "[\"" + Tools.GetSymbolType(values[i].Value) + "\",\"" + values[i].Key + "\"],";
                     }
                     if (values[i].Value == 14 || values[i].Value == 15)
                     {
-                        str += "[" + Tools.GetSymbolType(values[i].Value) + "," + values[i].Key + "],";
+                        str += "[\"" + Tools.GetSymbolType(values[i].Value) + "\",\"" + values[i].Key + "\"],";
                     }
                 }
                 str = str.Substring(0, str.Length - 1);
@@ -453,7 +429,7 @@ namespace CompilationTechnologyExperiment
                 string str = "[";
                 foreach (var i in values)
                 {
-                    str += "[" + i.Value + "," + i.Key + "],";
+                    str += "[" + i.Value + ",\"" + i.Key + "\"],";
                 }
                 str = str.Substring(0, str.Length - 1);
                 str += "]";
