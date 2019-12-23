@@ -126,8 +126,14 @@
   <data name="IdStartWithNumber" xml:space="preserve">
     <value>标识符以数字开头</value>
   </data>
+  <data name="NumberEFollowDot" xml:space="preserve">
+    <value>实数的小数部分出现字母</value>
+  </data>
   <data name="NumberMultiDotError" xml:space="preserve">
     <value>常数中有多个小数点</value>
+  </data>
+  <data name="NumberMultiE" xml:space="preserve">
+    <value>常数中有多个指数字母e</value>
   </data>
   <data name="TypeNotFound" xml:space="preserve">
     <value>类型不存在</value>

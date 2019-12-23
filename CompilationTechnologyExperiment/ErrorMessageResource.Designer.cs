@@ -88,11 +88,29 @@ namespace CompilationTechnologyExperiment {
         }
         
         /// <summary>
+        ///   查找类似 实数的小数部分出现字母 的本地化字符串。
+        /// </summary>
+        internal static string NumberEFollowDot {
+            get {
+                return ResourceManager.GetString("NumberEFollowDot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 常数中有多个小数点 的本地化字符串。
         /// </summary>
         internal static string NumberMultiDotError {
             get {
                 return ResourceManager.GetString("NumberMultiDotError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 常数中有多个指数字母e 的本地化字符串。
+        /// </summary>
+        internal static string NumberMultiE {
+            get {
+                return ResourceManager.GetString("NumberMultiE", resourceCulture);
             }
         }
         

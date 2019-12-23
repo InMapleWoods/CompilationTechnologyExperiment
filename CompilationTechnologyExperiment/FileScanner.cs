@@ -25,14 +25,16 @@ namespace CompilationTechnologyExperiment
             string symbol = "[]";
             try
             {
-                token = GetTokenFile(fileName);
-                symbol = GetSymbolFile(fileName);
+                var values = GetContentKeyValues(ProcessContent(GetFileContent(fileName)));
+                token = GetTokenFile(values);
+                symbol = GetSymbolFile(values);
             }
             catch
             {
             }
             error = error.Substring(0, error.Length - 1);
-            error += "]";
+            if (!string.IsNullOrEmpty(error))
+                error += "]";
             return new string[] { token, symbol, error };
         }
 
@@ -109,17 +111,6 @@ namespace CompilationTechnologyExperiment
                         i++;
                         continue;
                     }
-                    if (Tools.IsSemicolon(input, i))//若字符为一行的开头
-                    {
-                        builder.Clear();
-                        builder.Append(input[i]);
-                        i++;
-                        continue;
-                    }
-                    if (identifyKeywordOrIdentifier(input, ref i, builder, result))
-                    {
-                        continue;
-                    }
                     if (identifyNumber(input, ref i, builder, result))
                     {
                         continue;
@@ -133,6 +124,17 @@ namespace CompilationTechnologyExperiment
                         continue;
                     }
                     if (identifyOperatorsOrSeparators(input, ref i, builder, result))
+                    {
+                        continue;
+                    }
+                    if (Tools.IsSemicolon(input, i))//若字符为一行的开头
+                    {
+                        builder.Clear();
+                        builder.Append(input[i]);
+                        i++;
+                        continue;
+                    }
+                    if (identifyKeywordOrIdentifier(input, ref i, builder, result))
                     {
                         continue;
                     }
@@ -174,7 +176,17 @@ namespace CompilationTechnologyExperiment
                     }
                     else
                     {
-                        result.Add(new KeyValuePair<string, int>(word, 33));//返回标识符的种别编码33
+                        string keyWordPattern = @"(\d{1,})([A-Za-z]{2,})";//数字开头的数字、字母串
+                        if (!Regex.IsMatch(word, keyWordPattern))
+                        {
+                            result.Add(new KeyValuePair<string, int>(word, 33));//返回标识符的种别编码33
+                        }
+                        else
+                        {
+                            error += "[" + ErrorMessageResource.IdStartWithNumber + "," + word + "],";
+                            Match match = Regex.Match(word, keyWordPattern);
+                            result.Add(new KeyValuePair<string, int>(match.Groups[1].Value.ToString(), 34));
+                        }
                     }
                     builder.Clear();
                     returnValue = true;
@@ -200,7 +212,40 @@ namespace CompilationTechnologyExperiment
                 builder.Append(input[index]);
                 if (!char.IsNumber(input[index + 1]))
                 {
-                    if (input[index + 1] == 'e' || input[index + 1] == 'E' || input[index + 1] == '.')
+                    if (input[index + 1] != 'e' && input[index + 1] != 'E' && input[index + 1] != '.')
+                    {
+                        string number = builder.ToString();
+                        if (!isDouble)
+                        {
+                            result.Add(new KeyValuePair<string, int>(number, 34));
+                        }
+                        else
+                        {
+                            result.Add(new KeyValuePair<string, int>(number, 35));
+                        }
+                        builder.Clear();
+                        index = Tools.MoveToRowEnd(input, index) - 1;
+                        returnValue = true;
+                    }
+                    if (input[index + 1] == 'e' || input[index + 1] == 'E')
+                    {
+                        if (!isDouble)
+                        {
+                            isDouble = true;
+                            builder.Append(input[index + 1]);
+                            index = index + 1;
+                        }
+                        else
+                        {
+                            index = Tools.MoveToRowEnd(input, index);
+                            string number = builder.ToString();
+                            result.Add(new KeyValuePair<string, int>(number, 35));
+                            builder.Clear();
+                            index = Tools.MoveToRowEnd(input, index);
+                            error += "[" + ErrorMessageResource.NumberMultiE + "," + number + "],";
+                        }
+                    }
+                    if (input[index + 1] == '.')
                     {
                         if (!isDouble)
                         {
@@ -217,24 +262,6 @@ namespace CompilationTechnologyExperiment
                             index = Tools.MoveToRowEnd(input, index);
                             error += "[" + ErrorMessageResource.NumberMultiDotError + "," + number + "],";
                         }
-                    }
-                    else
-                    {
-                        string number = builder.ToString();
-                        if (!isDouble)
-                        {
-                            result.Add(new KeyValuePair<string, int>(number, 34));
-                        }
-                        else
-                        {
-                            result.Add(new KeyValuePair<string, int>(number, 35));
-                        }
-                        builder.Clear();
-                        while (char.IsLetter(input[index + 1]))
-                        {
-                            index++;
-                        }
-                        returnValue = true;
                     }
                 }
                 index++;
@@ -278,10 +305,10 @@ namespace CompilationTechnologyExperiment
         private static bool identifyString(string input, ref int index, StringBuilder builder, List<KeyValuePair<string, int>> result)
         {
             bool returnValue = false;
-            if (input[index] == '\"')
+            if (input[index] == '"')
             {
                 index = index + 1;
-                while (input[index] != '\"')
+                while (input[index] != '"')
                 {
                     builder.Append(input[index]);
                     index++;
@@ -379,21 +406,47 @@ namespace CompilationTechnologyExperiment
         /// </summary>
         /// <param name="fileName">文件名</param>
         /// <returns>符号表文件字符串</returns>
-        public static string GetSymbolFile(string fileName)
+        public static string GetSymbolFile(List<KeyValuePair<string, int>> values)
         {
             try
             {
-                var values = GetContentKeyValues(ProcessContent(GetFileContent(fileName)));
                 if (values == null)
                 {
                     return "";
                 }
                 string str = "[";
-                foreach (var i in values)
+                for (int i = 0; i < values.Count; i++)
                 {
-                    if (i.Value >= 34 && i.Value <= 37)
+                    if (i != values.Count - 2)
                     {
-                        str += "[" + Tools.GetSymbolType(i.Value) + "," + i.Key + "],";
+                        if (values[i].Value == 1)
+                        {
+                            str += "[" + Tools.GetSymbolType(values[i].Value) + "," + values[i + 1].Key + "],";
+                        }
+                        else if (values[i].Value == 2)
+                        {
+                            str += "[" + Tools.GetSymbolType(values[i].Value) + "," + values[i + 1].Key + "],";
+                        }
+                        else if (values[i].Value == 3)
+                        {
+                            str += "[" + Tools.GetSymbolType(values[i].Value) + "," + values[i + 1].Key + "],";
+                        }
+                        else if (values[i].Value == 4)
+                        {
+                            str += "[" + Tools.GetSymbolType(values[i].Value) + "," + values[i + 1].Key + "],";
+                        }
+                        else if (values[i].Value == 5)
+                        {
+                            str += "[" + Tools.GetSymbolType(values[i].Value) + "," + values[i + 1].Key + "],";
+                        }
+                    }
+                    if (values[i].Value >= 34 && values[i].Value <= 37)
+                    {
+                        str += "[" + Tools.GetSymbolType(values[i].Value) + "," + values[i].Key + "],";
+                    }
+                    if (values[i].Value == 14 || values[i].Value == 15)
+                    {
+                        str += "[" + Tools.GetSymbolType(values[i].Value) + "," + values[i].Key + "],";
                     }
                 }
                 str = str.Substring(0, str.Length - 1);
@@ -410,11 +463,10 @@ namespace CompilationTechnologyExperiment
         /// </summary>
         /// <param name="fileName">文件名</param>
         /// <returns>token文件字符串</returns>
-        public static string GetTokenFile(string fileName)
+        public static string GetTokenFile(List<KeyValuePair<string, int>> values)
         {
             try
             {
-                var values = GetContentKeyValues(ProcessContent(GetFileContent(fileName)));
                 if (values == null)
                 {
                     return "";

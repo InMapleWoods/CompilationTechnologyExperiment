@@ -79,9 +79,10 @@ namespace CompilationTechnologyExperiment
                 return false;
             if (index >= input.Length)
                 return false;
+            List<char> legalsymbol = ".'\"".ToList();
             List<char> op = "+-*%/|&=!><".ToList();
             List<char> sp = "{}[](),; ".ToList();
-            if (op.Contains(input[index]) || sp.Contains(input[index]))
+            if (op.Contains(input[index]) || sp.Contains(input[index])|| legalsymbol.Contains(input[index]))
             {
                 return true;
             }
@@ -90,10 +91,6 @@ namespace CompilationTechnologyExperiment
                 return true;
             }
             else if (char.IsNumber(input[index]))
-            {
-                return true;
-            }
-            else if (input[index] == '.')
             {
                 return true;
             }
@@ -132,6 +129,13 @@ namespace CompilationTechnologyExperiment
             string result = "";
             switch (type)
             {
+                case 1: result="整型";break;
+                case 2: result= "浮点型"; break;
+                case 3: result= "字符型"; break;
+                case 4: result= "布尔型"; break;
+                case 5: result= "字符串型"; break;
+                case 14: result= "布尔型"; break;
+                case 15: result= "布尔型"; break;
                 case 34: result="整型";break;
                 case 35: result= "浮点型"; break;
                 case 36: result= "字符型"; break;
