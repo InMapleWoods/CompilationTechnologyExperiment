@@ -82,8 +82,8 @@ namespace CompilationTechnologyExperiment
             if (index >= input.Length)
                 return false;
             List<char> legalsymbol = ".'\"".ToList();
-            List<char> op = "+-*%/|&=!><".ToList();
-            List<char> sp = "{}[](),; ".ToList();
+            List<char> op = "+-*%/=><".ToList();
+            List<char> sp = "{}[](),;:_ ".ToList();
             if (op.Contains(input[index]) || sp.Contains(input[index]) || legalsymbol.Contains(input[index]))
             {
                 return true;
@@ -129,19 +129,18 @@ namespace CompilationTechnologyExperiment
         public static string GetSymbolType(int type)
         {
             string result = "";
-            switch (type)
-            {
-                case 1: result = "整型"; break;
-                case 2: result = "浮点型"; break;
-                case 3: result = "字符型"; break;
-                case 4: result = "布尔型"; break;
-                case 5: result = "字符串型"; break;
-                case 14: result = "布尔型"; break;
-                case 15: result = "布尔型"; break;
-                case 34: result = "整型"; break;
-                case 35: result = "浮点型"; break;
-                case 36: result = "字符型"; break;
-                case 37: result = "字符串型"; break;
+            switch (type) { 
+                case 3: result = "整型"; break;
+                case 4: result = "字符型"; break;
+                case 5: result = "布尔型"; break;
+                case 6: result = "实型"; break;
+                case 7: result = "字符串型"; break;
+                case 22: result = "布尔型"; break;
+                case 23: result = "布尔型"; break;
+                case 41: result = "整型"; break;
+                case 42: result = "实型"; break;
+                case 43: result = "字符型"; break;
+                case 45: result = "字符串型"; break;
                 default: result = "error"; break;
             }
             if (result == "error")
@@ -158,6 +157,10 @@ namespace CompilationTechnologyExperiment
         /// <returns>数组内容</returns>
         public static string[][] GetJsonObject(string input)
         {
+            if (string.IsNullOrEmpty(input))
+            {
+                throw new ErrorException(ErrorMessageResource.FileEmptyError);
+            }
             List<string[]> output = new List<string[]>();
             dynamic JSONObject = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(input);
             foreach(var i in JSONObject)

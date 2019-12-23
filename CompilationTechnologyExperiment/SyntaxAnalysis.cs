@@ -1,44 +1,53 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace CompilationTechnologyExperiment
 {
-    
+
     class SyntaxAnalysis
     {
-        class token
+
+        public static class SyntaxAnalysis
         {
-            int label;
-            string name;
-            int code;
-            int addr;
-            int getlabel() { return label; }
-            string getname() { return name;}
-            int getcode() { return code; }
-            int getaddr() { return addr; }
-            token() { label = 0;code = 0;addr = 0; }
-        }
-        Boolean SyntaxAnalaysisResult()
-        {
-            getbuf();
-            program();
-            Console.WriteLine("YES\n");
-            return (true);
-        }
-       int i = 0;
-       token t = new token();
-       void getbuf()
-        {
-            
-        }
-        Boolean program()
-        {
-            proghead();
-            block();
-            if()
+            private static string[][] GetSymbol()
+            {
+                string[][] Symbols = Tools.GetJsonObject(Tools.GetFileContent("Symbol.txt"));
+                return Symbols;
+            }
+            private static string[][] GetToken()
+            {
+                string[][] Tokens = Tools.GetJsonObject(Tools.GetFileContent("Token.txt"));
+                List<string[]> list = new List<string[]>();
+                foreach (var i in Tokens)
+                {
+                    int attr = GetAttrInSymbol(i[0]);
+                    list.Add(new string[] { i[0], i[1], attr.ToString() });
+                }
+                return list.ToArray();
+            }
+            private static int GetAttrInSymbol(string key)
+            {
+                string[][] list = GetSymbol();
+                for (int i = 0; i < list.Length; i++)
+                {
+                    if (key == list[i][0])
+                    {
+                        return i;
+                    }
+                }
+                return -1;
+            }
+            private static int index = 0;
+            public static bool AnalysisResult()
+            {
+                string[][] token = GetToken();//token[0]="real" token[1]=42 token[2]=attr
+                
+            }
+            bool program(string[][] token)
+            {
+                proghead();
+                block();
+                if () { }
+            }
         }
     }
 }

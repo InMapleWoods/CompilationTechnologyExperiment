@@ -155,13 +155,13 @@ namespace CompilationTechnologyExperiment
                         string keyWordPattern = @"(\d{1,})([A-Za-z]{2,})";//数字开头的数字、字母串
                         if (!Regex.IsMatch(word, keyWordPattern))
                         {
-                            result.Add(new KeyValuePair<string, int>(word, 33));//返回标识符的种别编码33
+                            result.Add(new KeyValuePair<string, int>(word, 40));//返回标识符的种别编码40
                         }
                         else
                         {
                             error += "[\"" + ErrorMessageResource.IdStartWithNumber + "\",\"" + word + "\"],";
                             Match match = Regex.Match(word, keyWordPattern);
-                            result.Add(new KeyValuePair<string, int>(match.Groups[1].Value.ToString(), 34));
+                            result.Add(new KeyValuePair<string, int>(match.Groups[1].Value.ToString(), 41));
                         }
                     }
                     builder.Clear();
@@ -200,7 +200,7 @@ namespace CompilationTechnologyExperiment
                         else
                         {
                             string number = builder.ToString();
-                            result.Add(new KeyValuePair<string, int>(number, 35));
+                            result.Add(new KeyValuePair<string, int>(number, 42));
                             builder.Clear();
                             if (input[index + 1] != '.')
                             {
@@ -218,11 +218,11 @@ namespace CompilationTechnologyExperiment
                         string number = builder.ToString();
                         if (!isDouble)
                         {
-                            result.Add(new KeyValuePair<string, int>(number, 34));
+                            result.Add(new KeyValuePair<string, int>(number, 41));
                         }
                         else
                         {
-                            result.Add(new KeyValuePair<string, int>(number, 35));
+                            result.Add(new KeyValuePair<string, int>(number, 42));
                         }
                         builder.Clear();
                         if (input[index + 1] != ';')
@@ -259,7 +259,7 @@ namespace CompilationTechnologyExperiment
                 string charValue = builder.ToString();
                 builder.Clear();
                 returnValue = true;
-                result.Add(new KeyValuePair<string, int>(charValue, 36));
+                result.Add(new KeyValuePair<string, int>(charValue, 43));
                 index++;
             }
             return returnValue;
@@ -285,7 +285,7 @@ namespace CompilationTechnologyExperiment
                 string stringValue = builder.ToString();
                 builder.Clear();
                 returnValue = true;
-                result.Add(new KeyValuePair<string, int>(stringValue, 37));
+                result.Add(new KeyValuePair<string, int>(stringValue, 45));
                 index++;
             }
 
@@ -304,7 +304,7 @@ namespace CompilationTechnologyExperiment
             while (Tools.IsBelongToSeparatorsOrOperators(input, index))
             {
                 builder.Append(input[index]);
-                if (input[index] == '>' || input[index] == '<' || input[index] == '!' || input[index] == '=')
+                if (input[index] == '>'|| input[index] == ':')
                 {
                     if (input[index + 1] == '=')
                     {
@@ -312,18 +312,14 @@ namespace CompilationTechnologyExperiment
                         index = index + 1;
                     }
                 }
-                else if (input[index] == '|')
+                else if (input[index] == '<')
                 {
-                    if (input[index + 1] == '|')
+                    if (input[index + 1] == '=')
                     {
                         builder.Append(input[index + 1]);
                         index = index + 1;
-
                     }
-                }
-                else if (input[index] == '&')
-                {
-                    if (input[index + 1] == '&')
+                    else if (input[index + 1] == '>')
                     {
                         builder.Append(input[index + 1]);
                         index = index + 1;

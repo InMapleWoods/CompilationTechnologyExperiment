@@ -6,15 +6,15 @@ namespace CompilationTechnologyExperiment
     {
         static readonly Dictionary<string, int> Keywords = new Dictionary<string, int>()
             {
-                {"int",1},{"double",2},{"char",3},{"bool",4},{"string",5},{"void",6},{"read",7},{"write",8},{"for",9},{"while",10},{"if",11},{"then",12},{"else",13},{"true",14},{"false",15}
+                {"begin",1},{"end",2},{"integer",3},{"char",4},{"bool",5},{"real",6},{"string",7},{"input",8},{"output",9},{"program",10},{"read",11},{"write",12},{"for",13},{"to",14},{"while",15},{"do",16},{"repeat",17},{"until",18},{"if",19},{"then",20},{"else",21},{"true",22},{"false",23},{"var",24},{"const",25},{"and",26},{"or",27},{"not",28}
             };
         static readonly Dictionary<string, int> Operators = new Dictionary<string, int>()
             {
-                {"+",16},{"-",17},{"*",18},{"%",19},{"/",20},{"|",21},{"||",22},{"&",23},{"&&",24},{"!",25},{">",26},{"<",27},{"<=",28},{">=",29},{"=",30},{"==",31},{"!=",32}
+                {"+",29},{"-",30},{"*",31},{"/",32},{"=",33},{"<",34},{">",35},{"<=",36},{">=",37},{"<>",38},{":=",39}
             };
         static readonly Dictionary<string, int> Separators = new Dictionary<string, int>()
             {
-                {"{",38},{"}",39},{"[",40},{"]",41},{"(",42},{")",43},{",",44},{";",45},{"/*",46},{"*/",47}
+                {"(",46},{")",47},{":",48},{".",49},{";",50},{",",51},{"_",52},{"'",53},{"\"",54},{"/*",55},{"*/",56}
             };
 
     }
