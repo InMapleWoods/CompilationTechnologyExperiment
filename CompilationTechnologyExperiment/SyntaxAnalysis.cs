@@ -6,8 +6,12 @@ using System.Threading.Tasks;
 
 namespace CompilationTechnologyExperiment
 {
+    
     class SyntaxAnalysis
     {
+       void getbuf()
+        {
 
+        }
     }
 }
