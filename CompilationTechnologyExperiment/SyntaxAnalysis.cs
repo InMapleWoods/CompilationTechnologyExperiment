@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CompilationTechnologyExperiment
 {
-    class Class1
+    class SyntaxAnalysis
     {
     }
 }
