@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace CompilationTechnologyExperiment
@@ -147,6 +149,45 @@ namespace CompilationTechnologyExperiment
                 throw new ErrorException(ErrorMessageResource.TypeNotFound);
             }
             return result;
+        }
+
+        /// <summary>
+        /// 字符串获取数组
+        /// </summary>
+        /// <param name="input">字符串</param>
+        /// <returns>数组内容</returns>
+        public static string[][] GetJsonObject(string input)
+        {
+            List<string[]> output = new List<string[]>();
+            dynamic JSONObject = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(input);
+            foreach(var i in JSONObject)
+            {
+                output.Add(new string[] { i[1],i[0]});
+            }
+            return output.ToArray();
+        }
+        /// <summary>
+        /// 获取文件内容
+        /// </summary>
+        /// <param name="fileName">文件名</param>
+        /// <returns>文件内容</returns>
+        public static string GetFileContent(string fileName)
+        {
+            string output = string.Empty;
+            string errorMessage = string.Empty;
+            if (File.Exists(fileName) == true)
+            {
+                output = File.ReadAllText(fileName);
+                if (string.IsNullOrEmpty(output))
+                {
+                    throw new ErrorException(ErrorMessageResource.FileEmptyError);
+                }
+            }
+            else
+            {
+                throw new ErrorException(ErrorMessageResource.FileNotExist);
+            }
+            return output;
         }
 
     }
