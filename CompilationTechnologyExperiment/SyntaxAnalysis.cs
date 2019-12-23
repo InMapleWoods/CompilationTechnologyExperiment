@@ -8,5 +8,6 @@ namespace CompilationTechnologyExperiment
 {
     class SyntaxAnalysis
     {
+
     }
 }
