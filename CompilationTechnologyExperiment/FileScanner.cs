@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -304,7 +303,7 @@ namespace CompilationTechnologyExperiment
             while (Tools.IsBelongToSeparatorsOrOperators(input, index))
             {
                 builder.Append(input[index]);
-                if (input[index] == '>'|| input[index] == ':')
+                if (input[index] == '>' || input[index] == ':')
                 {
                     if (input[index + 1] == '=')
                     {
@@ -384,20 +383,20 @@ namespace CompilationTechnologyExperiment
                 {
                     if (i != values.Count - 2)
                     {
-                        if (values[i].Value >= 1 && values[i].Value <= 5)
+                        if (values[i].Value >= 3 && values[i].Value <= 7)
                         {
-                            str += "[\"" + Tools.GetSymbolType(values[i].Value) + "\",\"" + values[i].Key + "\"],";
+                            str += "[\"" + Tools.GetSymbolType(values[i].Value) + "\",\"" + values[i].Key + "\"," + i + "],";
                             i++;
                             continue;
                         }
                     }
-                    if (values[i].Value >= 34 && values[i].Value <= 37)
+                    if (values[i].Value >= 41 && values[i].Value <= 45)
                     {
-                        str += "[\"" + Tools.GetSymbolType(values[i].Value) + "\",\"" + values[i].Key + "\"],";
+                        str += "[\"" + Tools.GetSymbolType(values[i].Value) + "\",\"" + values[i].Key + "\"," + i + "],";
                     }
-                    if (values[i].Value == 14 || values[i].Value == 15)
+                    if (values[i].Value == 22 || values[i].Value == 23)
                     {
-                        str += "[\"" + Tools.GetSymbolType(values[i].Value) + "\",\"" + values[i].Key + "\"],";
+                        str += "[\"" + Tools.GetSymbolType(values[i].Value) + "\",\"" + values[i].Key + "\"," + i + "],";
                     }
                 }
                 str = str.Substring(0, str.Length - 1);
