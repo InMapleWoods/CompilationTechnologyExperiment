@@ -26,6 +26,7 @@ namespace CompilationTechnologyExperiment
             }
             catch { }
             Console.Read();
+            Console.Read();
         }
     }
 }

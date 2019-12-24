@@ -414,10 +414,12 @@ namespace CompilationTechnologyExperiment
                 {
                     return "";
                 }
+                int index = 0;
                 string str = "[";
                 foreach (var i in values)
                 {
-                    str += "[" + i.Value + ",\"" + i.Key + "\"],";
+                    index++;
+                    str += "[" + index + ",\"" + i.Value + "\",\"" + i.Key + "\"],";
                 }
                 str = str.Substring(0, str.Length - 1);
                 str += "]";

@@ -14,6 +14,11 @@ namespace CompilationTechnologyExperiment
         private static string error ="[";
 
         /// <summary>
+        /// Token长度
+        /// </summary>
+        private static int tokenLength = 0;
+
+        /// <summary>
         /// 获取错误信息
         /// </summary>
         /// <returns>错误信息</returns>
@@ -46,8 +51,9 @@ namespace CompilationTechnologyExperiment
             foreach (var i in Tokens)
             {
                 int attr = GetAttrInSymbol(i[0]);
-                list.Add(new string[] { i[0], i[1], attr.ToString() });
+                list.Add(new string[] { i[2], i[0], attr.ToString() });
             }
+            tokenLength = list.Count;
             return list.ToArray();
         }
 
@@ -87,7 +93,7 @@ namespace CompilationTechnologyExperiment
                 Console.WriteLine("YES");
                 return true;
             }
-            catch
+            catch(ErrorException e)
             {
                 Console.WriteLine("No");
                 return false;
@@ -99,7 +105,7 @@ namespace CompilationTechnologyExperiment
         /// </summary>
         private static void Next()
         {
-            if (index < GetToken().Length - index)
+            if (index <tokenLength - 1)
             {
                 index++;
             }
@@ -330,7 +336,7 @@ namespace CompilationTechnologyExperiment
         /// <param name="token">Token数组</param>
         private static void Expression(string[][] token)
         {
-            if (token[index][1] == Keywords.FALSE || token[index][1] == Keywords.TRUE || (token[index][0] != "-1" && Tools.GetSymbolType(token[index][1]) == "布尔型"))//false或true或单词为保留字且在符号表中的类型为bool型
+            if (token[index][1] == Keywords.FALSE || token[index][1] == Keywords.TRUE || (token[index][0] != "-1" && GetSymbol()[int.Parse(token[index][2])][0] == "布尔型"))//false或true或单词为保留字且在符号表中的类型为bool型
             {
                 BoolExp(token);//布尔表达式
             }

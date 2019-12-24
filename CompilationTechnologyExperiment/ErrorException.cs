@@ -18,7 +18,7 @@ namespace CompilationTechnologyExperiment
 
         public ErrorException(string str) : base(str)
         {
-
+            Console.WriteLine(DateTime.Now.ToString() + str);
         }
         public ErrorException()
         {
