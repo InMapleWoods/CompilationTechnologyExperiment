@@ -11,7 +11,19 @@ namespace CompilationTechnologyExperiment
         /// <summary>
         /// 错误信息
         /// </summary>
-        private static string error = "";
+        private static string error = "[";
+
+        /// <summary>
+        /// 获取错误信息
+        /// </summary>
+        /// <returns>错误信息</returns>
+        public static string GetErrorMessage()
+        {
+            error = error.Substring(0, error.Length - 1);
+            if (!string.IsNullOrEmpty(error))
+                error += "]";
+            return error;
+        }
 
         /// <summary>
         /// 获取符号表

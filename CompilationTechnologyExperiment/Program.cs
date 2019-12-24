@@ -10,13 +10,15 @@ namespace CompilationTechnologyExperiment
             try
             {
                 Console.WriteLine("请输入代码文件地址");
-                SyntaxAnalysis.GetToken();
                 string path = Console.ReadLine();
-                string[] result = FileScanner.ScannerResult(path);
-                File.WriteAllText("Token.txt", result[0]);
-                File.WriteAllText("Symbol.txt", result[1]);
-                File.WriteAllText("Error.txt", result[2]);
+                string[] scannerResult = FileScanner.ScannerResult(path);
+                File.WriteAllText("Token.txt", scannerResult[0]);
+                File.WriteAllText("Symbol.txt", scannerResult[1]);
+                File.WriteAllText("Error.txt", scannerResult[2]);
                 Console.WriteLine("Token文件和符号表文件已经生成在程序所在目录");
+                Console.WriteLine("按任意键进行语法分析");
+            Console.Read();
+                bool syntaxAnalysisResult = SyntaxAnalysis.AnalysisResult();
             }
             catch { }
             Console.Read();
