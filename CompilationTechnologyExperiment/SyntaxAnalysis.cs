@@ -5,6 +5,7 @@ namespace CompilationTechnologyExperiment
 {
     public static class SyntaxAnalysis
     {
+        private static string error = "";
         private static string[][] GetSymbol()
         {
             string[][] Symbols = Tools.GetJsonObject(Tools.GetFileContent("Symbol.txt"));
@@ -42,23 +43,21 @@ namespace CompilationTechnologyExperiment
             Console.WriteLine("YES\n");
             return true;
         }
-        public static bool Program(string[][] token)
+        public static void Program(string[][] token)
         {
-            bool f = true;
-            if (!Proghead(token)) {return false; }
-            if (!Block(token)) { return false; }
+            Proghead(token);
+            Block(token);
             if (token[index][1] == keyword.SEM)//判断“；”
             {
                 index++;
             }
             else
             {
-                Console.WriteLine("miss';'\n");
-                return false;
+                error += "[\"miss a ';'\",\"" + index + "\"],";
+                throw new ErrorException();
             }
-            return f;
         }
-        public static bool Proghead(string[][] token)
+        public static void Proghead(string[][] token)
         {
             if (token[index][1] == keyword.PROGRAM)//"program"
             {
@@ -72,57 +71,51 @@ namespace CompilationTechnologyExperiment
                     }
                     else
                     {
-                        Console.WriteLine("miss';'\n");
-                        return false;
+                        error += "[\"miss a ';'\",\"" + index + "\"],";
+                        throw new ErrorException();
                     }
                 }
                 else
                 {
-                    Console.WriteLine("error of ID");
-                    return false;
+                    error += "[\"error of ID\",\"" + index + "\"],";
+                    throw new ErrorException();
                 }
             }
             else
             {
-                Console.WriteLine("missing keyword program\n");
-                return false;
+                error += "[\"missing keyword program\",\"" + index + "\"],";
+                throw new ErrorException();
             }
-            return true;
         }
-        public static bool Block(string[][] token)//程序体部分，常量说明，变量说明，语句部分（变量说明，复合句）
+        public static void Block(string[][] token)//程序体部分，常量说明，变量说明，语句部分（变量说明，复合句）
         {
-            bool f = true;
-            if (!Consexpl(token)) { f = false; }//常量说明
-            if (!Varexpl(token)) { f = false; }//变量说明
-            if (!Compsent(token)) { f = false; }//复合语句
-            return f;
+            Consexpl(token);//常量说明
+            Varexpl(token);//变量说明
+            Compesent(token);//复合语句
         }
-        public static bool Consexpl(string[][] token)//常量说明部分：整数or实数
+        public static void Consexpl(string[][] token)//常量说明部分：整数or实数
         {
-            bool f = true;
             if (token[index][1] == keyword.整型 || token[index][1] == keyword.实型)
             {
                 index++;
-                if (!Consdefi(token)) { f = false; }
-                if (!Conssuff(token)) { f = false; }
+                Consdefi(token);
                 if (token[index][1] == keyword.SEM)
                 {
                     index++;
                 }
                 else
                 {
-                    Console.WriteLine("miss';'\n");
-                    return false;
+                    error += "[\"miss a ';'\",\"" + index + "\"],";
+                    throw new ErrorException();
                 }
             }
-            return f;
         }
-        public static bool Consdefi(string[][] token)//常量定义：标识符+等号+无符号数
+        public static void Consdefi(string[][] token)//常量定义：标识符+等号+无符号数
         {
             if (token[index][1] == keyword.ID)
             {
                 index++;
-                if(token[index][1]==keyword.EQU)
+                if (token[index][1] == keyword.EQU)
                 {
                     index++;
                     if (token[index][1] == keyword.INTEGER)
@@ -131,39 +124,37 @@ namespace CompilationTechnologyExperiment
                     }
                     else
                     {
-                        Console.WriteLine("miss INREGER\n");
-                        return false;
+                        error += "[\"miss INREGER\",\"" + index + "\"],";
+                        throw new ErrorException();
                     }
                 }
                 else
                 {
-                    Console.WriteLine("miss '='\n");
-                    return false;
+                    error += "[\"miss a '='\",\"" + index + "\"],";
+                    throw new ErrorException();
                 }
             }
             else
             {
-                Console.WriteLine("miss ID\n");
-                return false;
+                error += "[\"miss ID\",\"" + index + "\"],";
+                throw new ErrorException();
             }
-            return true;
         }
-        public static bool Conssuff(string[][] token)//常量定义后缀：,+常量定义后缀
+        public static void Conssuff(string[][] token)//常量定义后缀：,+常量定义后缀
         {
-            bool f = true;
             if (token[index][1] == keyword.DOUHAO)
             {
                 index++;
-                if (!Consdefi(token)) { f = false; }
-                if (!Conssuff(token)) { f = false; }
-                if(token[index][1]==keyword.SEM)
+                Consdefi(token);
+                Conssuff(token);
+                if (token[index][1] == keyword.SEM)
                 {
                     index++;
                 }
                 else
                 {
-                    Console.WriteLine("miss ';'\n");
-                    return false;
+                    error += "[\"miss a ';'\",\"" + index + "\"],";
+                    throw new ErrorException();
                 }
             }
             return f;
@@ -184,9 +175,9 @@ namespace CompilationTechnologyExperiment
             bool f = true;
             if (token[index][1] == keyword.ID)
             {
-                index++;
-                if (!Idsuff(token)) { f = false; }
-                if(token[index][1]==keyword.MAOHAO)
+                index++;Idsuff(token)
+                if (!) { f = false; }
+                if (token[index][1] == keyword.MAOHAO)
                 {
                     index++;
                     if (!Typeil(token)) { f = false; }
@@ -286,7 +277,7 @@ namespace CompilationTechnologyExperiment
         public static bool Assipro(string[][] token)//赋值语句
         {
             bool f = true;
-            if(token[index][1]==keyword.ID)
+            if (token[index][1] == keyword.ID)
             {
                 index++;
                 if (!Suffix(token)) { f = false; }
@@ -304,7 +295,7 @@ namespace CompilationTechnologyExperiment
             if (token[index][1] == keyword.FUZHI)
             {
                 index++;
-                if (!Express(token)){ f = false; }
+                if (!Express(token)) { f = false; }
 
             }
             else if (token[index][1] == keyword.LKUOHAO)
@@ -330,7 +321,7 @@ namespace CompilationTechnologyExperiment
             {
                 index++;
                 if (!Term(token)) { f = false; }
-                if (!Termsuff(token)){ f = false; }
+                if (!Termsuff(token)) { f = false; }
             }
             else if (token[index][1] == keyword.整型 || token[index][1] == keyword.实型 || token[index][1] == keyword.ID)
             {
@@ -364,7 +355,7 @@ namespace CompilationTechnologyExperiment
             {
                 index++;
                 if (!Factor(token)) { f = false; }
-                if (!Factsuff(token){ f = false; }
+                if (!Factsuff(token)) { f = false; }
             }
             return f;
         }
