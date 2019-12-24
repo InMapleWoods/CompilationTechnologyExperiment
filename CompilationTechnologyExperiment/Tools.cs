@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -129,7 +128,8 @@ namespace CompilationTechnologyExperiment
         public static string GetSymbolType(int type)
         {
             string result = "";
-            switch (type) { 
+            switch (type)
+            {
                 case 3: result = "整型"; break;
                 case 4: result = "字符型"; break;
                 case 5: result = "布尔型"; break;
@@ -163,9 +163,16 @@ namespace CompilationTechnologyExperiment
             }
             List<string[]> output = new List<string[]>();
             dynamic JSONObject = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(input);
-            foreach(var i in JSONObject)
+            foreach (var i in JSONObject)
             {
-                output.Add(new string[] { i[1],i[0]});
+                if (i.Count == 2)
+                {
+                    output.Add(new string[] { i[1], i[0] });
+                }
+                else if (i.Count == 3)
+                {
+                    output.Add(new string[] { i[1], i[0], i[2] });
+                }
             }
             return output.ToArray();
         }

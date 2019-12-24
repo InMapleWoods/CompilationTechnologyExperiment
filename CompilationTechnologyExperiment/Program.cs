@@ -10,6 +10,7 @@ namespace CompilationTechnologyExperiment
             try
             {
                 Console.WriteLine("请输入代码文件地址");
+                SyntaxAnalysis.GetToken();
                 string path = Console.ReadLine();
                 string[] result = FileScanner.ScannerResult(path);
                 File.WriteAllText("Token.txt", result[0]);
