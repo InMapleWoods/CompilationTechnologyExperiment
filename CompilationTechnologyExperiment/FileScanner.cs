@@ -50,9 +50,9 @@ namespace CompilationTechnologyExperiment
                 return string.Empty;
             }
             #region 消除换行和TAB
-            string output = input.Replace("\r", "");
-            output = output.Replace("\n", "");
-            output = output.Replace("\t", "");
+            string output = input.Replace("\r", " ");
+            output = output.Replace("\n", " ");
+            output = output.Replace("\t", " ");
             #endregion
             #region 删除注释
             string commentPattern = @"(?<!/)/\*([^*/]|\*(?!/)|/(?<!\*))*((?=\*/))(\*/)";//注释匹配
@@ -100,13 +100,6 @@ namespace CompilationTechnologyExperiment
                     }
                     if (identifyOperatorsOrSeparators(input, ref i, builder, result))
                     {
-                        continue;
-                    }
-                    if (Tools.IsSemicolon(input, i))//若字符为一行的开头
-                    {
-                        builder.Clear();
-                        builder.Append(input[i]);
-                        i++;
                         continue;
                     }
                     if (identifyKeywordOrIdentifier(input, ref i, builder, result))

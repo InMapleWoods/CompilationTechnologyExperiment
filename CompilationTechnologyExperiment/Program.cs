@@ -17,8 +17,12 @@ namespace CompilationTechnologyExperiment
                 File.WriteAllText("Error.txt", scannerResult[2]);
                 Console.WriteLine("Token文件和符号表文件已经生成在程序所在目录");
                 Console.WriteLine("按任意键进行语法分析");
-            Console.Read();
+                Console.Read();
                 bool syntaxAnalysisResult = SyntaxAnalysis.AnalysisResult();
+                if (!syntaxAnalysisResult)
+                {
+                    Console.WriteLine(SyntaxAnalysis.GetErrorMessage());
+                }
             }
             catch { }
             Console.Read();

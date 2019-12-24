@@ -56,8 +56,8 @@ namespace CompilationTechnologyExperiment
                 return false;
             if (index >= input.Length)
                 return false;
-            List<char> op = "+-*%/|&=!><".ToList();
-            List<char> sp = "{}[](),; ".ToList();
+            List<char> op = "+-*%/=><".ToList();
+            List<char> sp = "{}[](),;:_ ".ToList();
             if (op.Contains(input[index]) || sp.Contains(input[index]))
             {
                 return true;
@@ -120,6 +120,15 @@ namespace CompilationTechnologyExperiment
             return index;
         }
 
+        /// <summary>
+        /// 获取机内码对应的类型
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns>类型</returns>
+        public static string GetSymbolType(string type)
+        {
+            return GetSymbolType(int.Parse(type));
+        }
         /// <summary>
         /// 获取机内码对应的类型
         /// </summary>
