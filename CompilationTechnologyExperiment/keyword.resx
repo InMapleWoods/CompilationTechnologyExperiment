@@ -1,0 +1,282 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ADD" xml:space="preserve">
+    <value>29</value>
+  </data>
+  <data name="AND" xml:space="preserve">
+    <value>26</value>
+  </data>
+  <data name="BEGIN" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="BOOL" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="CHAR" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="CONST" xml:space="preserve">
+    <value>25</value>
+  </data>
+  <data name="DANYH" xml:space="preserve">
+    <value>53</value>
+  </data>
+  <data name="DAYU" xml:space="preserve">
+    <value>35</value>
+  </data>
+  <data name="DEQU" xml:space="preserve">
+    <value>37</value>
+  </data>
+  <data name="DIAN" xml:space="preserve">
+    <value>49</value>
+  </data>
+  <data name="DIV" xml:space="preserve">
+    <value>32</value>
+  </data>
+  <data name="DO" xml:space="preserve">
+    <value>16</value>
+  </data>
+  <data name="DOUHAO" xml:space="preserve">
+    <value>51</value>
+  </data>
+  <data name="ELSE" xml:space="preserve">
+    <value>21</value>
+  </data>
+  <data name="END" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="EQU" xml:space="preserve">
+    <value>33</value>
+  </data>
+  <data name="FALSE" xml:space="preserve">
+    <value>23</value>
+  </data>
+  <data name="FOR" xml:space="preserve">
+    <value>13</value>
+  </data>
+  <data name="FUZHI" xml:space="preserve">
+    <value>39</value>
+  </data>
+  <data name="ID" xml:space="preserve">
+    <value>40</value>
+  </data>
+  <data name="IF" xml:space="preserve">
+    <value>19</value>
+  </data>
+  <data name="INPUT" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="INTEGER" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="LKUOHAO" xml:space="preserve">
+    <value>46</value>
+  </data>
+  <data name="MAOHAO" xml:space="preserve">
+    <value>48</value>
+  </data>
+  <data name="MUL" xml:space="preserve">
+    <value>31</value>
+  </data>
+  <data name="NOT" xml:space="preserve">
+    <value>28</value>
+  </data>
+  <data name="OR" xml:space="preserve">
+    <value>27</value>
+  </data>
+  <data name="OUTPUT" xml:space="preserve">
+    <value>9</value>
+  </data>
+  <data name="PROGRAM" xml:space="preserve">
+    <value>10</value>
+  </data>
+  <data name="READ" xml:space="preserve">
+    <value>11</value>
+  </data>
+  <data name="REAL" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="REPEAT" xml:space="preserve">
+    <value>17</value>
+  </data>
+  <data name="RKUOHAO" xml:space="preserve">
+    <value>47</value>
+  </data>
+  <data name="SEM" xml:space="preserve">
+    <value>50</value>
+  </data>
+  <data name="SHUANGYH" xml:space="preserve">
+    <value>54</value>
+  </data>
+  <data name="STRING" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="SUB" xml:space="preserve">
+    <value>30</value>
+  </data>
+  <data name="THEN" xml:space="preserve">
+    <value>20</value>
+  </data>
+  <data name="TO" xml:space="preserve">
+    <value>14</value>
+  </data>
+  <data name="TRUE" xml:space="preserve">
+    <value>22</value>
+  </data>
+  <data name="UNEQU" xml:space="preserve">
+    <value>38</value>
+  </data>
+  <data name="UNTIL" xml:space="preserve">
+    <value>18</value>
+  </data>
+  <data name="VAR" xml:space="preserve">
+    <value>24</value>
+  </data>
+  <data name="WHILE" xml:space="preserve">
+    <value>15</value>
+  </data>
+  <data name="WRITE" xml:space="preserve">
+    <value>12</value>
+  </data>
+  <data name="XEQU" xml:space="preserve">
+    <value>36</value>
+  </data>
+  <data name="XHX" xml:space="preserve">
+    <value>52</value>
+  </data>
+  <data name="XIAOYU" xml:space="preserve">
+    <value>34</value>
+  </data>
+  <data name="字符串型" xml:space="preserve">
+    <value>45</value>
+  </data>
+  <data name="字符型" xml:space="preserve">
+    <value>43</value>
+  </data>
+  <data name="实型" xml:space="preserve">
+    <value>42</value>
+  </data>
+  <data name="布尔型" xml:space="preserve">
+    <value>44</value>
+  </data>
+  <data name="整型" xml:space="preserve">
+    <value>41</value>
+  </data>
+</root>
