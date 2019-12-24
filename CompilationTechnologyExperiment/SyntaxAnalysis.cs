@@ -3,14 +3,30 @@ using System.Collections.Generic;
 
 namespace CompilationTechnologyExperiment
 {
+    /// <summary>
+    /// 语法分析器类
+    /// </summary>
     public static class SyntaxAnalysis
     {
+        /// <summary>
+        /// 错误信息
+        /// </summary>
         private static string error = "";
+
+        /// <summary>
+        /// 获取符号表
+        /// </summary>
+        /// <returns>符号表数组</returns>
         private static string[][] GetSymbol()
         {
             string[][] Symbols = Tools.GetJsonObject(Tools.GetFileContent("Symbol.txt"));
             return Symbols;
         }
+
+        /// <summary>
+        /// 获取Token表
+        /// </summary>
+        /// <returns>Token数组</returns>
         private static string[][] GetToken()
         {
             string[][] Tokens = Tools.GetJsonObject(Tools.GetFileContent("Token.txt"));
@@ -22,6 +38,12 @@ namespace CompilationTechnologyExperiment
             }
             return list.ToArray();
         }
+
+        /// <summary>
+        /// 获取Token在符号表中的位置
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         private static int GetAttrInSymbol(string key)
         {
             string[][] list = GetSymbol();
@@ -34,354 +56,443 @@ namespace CompilationTechnologyExperiment
             }
             return -1;
         }
+
+        /// <summary>
+        /// 当前Token的索引
+        /// </summary>
         private static int index = 0;
 
+        /// <summary>
+        /// 语法分析
+        /// </summary>
+        /// <returns>分析结果</returns>
         public static bool AnalysisResult()
         {
             string[][] token = GetToken();//token[0]="real" token[1]=42 token[2]=attr
-            Program(token);
-            Console.WriteLine("YES\n");
-            return true;
+            try
+            {
+                Program(token);
+                Console.WriteLine("YES");
+                return true;
+            }
+            catch
+            {
+                Console.WriteLine("No");
+                return false;
+            }
         }
+        
+        /// <summary>
+        /// 分析程序体
+        /// </summary>
+        /// <param name="token">Token数组</param>
         public static void Program(string[][] token)
         {
             Proghead(token);
             Block(token);
-            if (token[index][1] == keyword.SEM)//判断“；”
+            if (token[index][1] == Keywords.SEM)//判断“；”
             {
                 index++;
             }
             else
             {
                 error += "[\"miss a ';'\",\"" + index + "\"],";
-                throw new ErrorException();
+                throw new ErrorException("miss a ';'", index.ToString());
             }
         }
+
+        /// <summary>
+        /// 分析程序头
+        /// </summary>
+        /// <param name="token">Token数组</param>
         public static void Proghead(string[][] token)
         {
-            if (token[index][1] == keyword.PROGRAM)//"program"
+            if (token[index][1] == Keywords.PROGRAM)//"program"
             {
                 index++;
-                if (token[index][1] == keyword.ID)
+                if (token[index][1] == Keywords.ID)
                 {
                     index++;
-                    if (token[index][1] == keyword.SEM)
+                    if (token[index][1] == Keywords.SEM)
                     {
                         index++;
                     }
                     else
                     {
                         error += "[\"miss a ';'\",\"" + index + "\"],";
-                        throw new ErrorException();
+                        throw new ErrorException("miss a ';'", index.ToString());
                     }
                 }
                 else
                 {
                     error += "[\"error of ID\",\"" + index + "\"],";
-                    throw new ErrorException();
+                    throw new ErrorException("error of ID", index.ToString());
                 }
             }
             else
             {
-                error += "[\"missing keyword program\",\"" + index + "\"],";
-                throw new ErrorException();
+                error += "[\"missing Keywords.program\",\"" + index + "\"],";
+                throw new ErrorException("missing Keywords.program", index.ToString());
             }
         }
-        public static void Block(string[][] token)//程序体部分，常量说明，变量说明，语句部分（变量说明，复合句）
+
+        /// <summary>
+        /// 程序体部分，常量说明，变量说明，语句部分（变量说明，复合句）
+        /// </summary>
+        /// <param name="token">Token数组</param>
+        public static void Block(string[][] token)
         {
             Consexpl(token);//常量说明
             Varexpl(token);//变量说明
             Compesent(token);//复合语句
         }
-        public static void Consexpl(string[][] token)//常量说明部分：整数or实数
+
+        /// <summary>
+        /// 常量说明部分：整数or实数
+        /// </summary>
+        /// <param name="token">Token数组</param>
+        public static void Consexpl(string[][] token)
         {
-            if (token[index][1] == keyword.整型 || token[index][1] == keyword.实型)
+            if (token[index][1] == Keywords.整型 || token[index][1] == Keywords.实型)
             {
                 index++;
                 Consdefi(token);
-                if (token[index][1] == keyword.SEM)
+                if (token[index][1] == Keywords.SEM)
                 {
                     index++;
                 }
                 else
                 {
                     error += "[\"miss a ';'\",\"" + index + "\"],";
-                    throw new ErrorException();
+                    throw new ErrorException("miss a ';'", index.ToString());
                 }
             }
         }
-        public static void Consdefi(string[][] token)//常量定义：标识符+等号+无符号数
+
+        /// <summary>
+        /// 常量定义：标识符+等号+无符号数
+        /// </summary>
+        /// <param name="token">Token数组</param>
+        public static void Consdefi(string[][] token)
         {
-            if (token[index][1] == keyword.ID)
+            if (token[index][1] == Keywords.ID)
             {
                 index++;
-                if (token[index][1] == keyword.EQU)
+                if (token[index][1] == Keywords.EQU)
                 {
                     index++;
-                    if (token[index][1] == keyword.INTEGER)
+                    if (token[index][1] == Keywords.INTEGER)
                     {
                         index++;
                     }
                     else
                     {
                         error += "[\"miss INREGER\",\"" + index + "\"],";
-                        throw new ErrorException();
+                        throw new ErrorException("miss INREGER", index.ToString());
                     }
                 }
                 else
                 {
                     error += "[\"miss a '='\",\"" + index + "\"],";
-                    throw new ErrorException();
+                    throw new ErrorException("miss a '='", index.ToString());
                 }
             }
             else
             {
                 error += "[\"miss ID\",\"" + index + "\"],";
-                throw new ErrorException();
+                throw new ErrorException("miss ID", index.ToString());
             }
         }
-        public static void Conssuff(string[][] token)//常量定义后缀：,+常量定义后缀
+
+        /// <summary>
+        /// 常量定义后缀：,+常量定义后缀
+        /// </summary>
+        /// <param name="token">Token数组</param>
+        public static void Conssuff(string[][] token)
         {
-            if (token[index][1] == keyword.DOUHAO)
+            if (token[index][1] == Keywords.DOUHAO)
             {
                 index++;
                 Consdefi(token);
                 Conssuff(token);
-                if (token[index][1] == keyword.SEM)
+                if (token[index][1] == Keywords.SEM)
                 {
                     index++;
                 }
                 else
                 {
                     error += "[\"miss a ';'\",\"" + index + "\"],";
-                    throw new ErrorException();
+                    throw new ErrorException("miss a ';'", index.ToString());
                 }
             }
-            return f;
         }
-        public static bool Varexpl(string[][] token)//变量说明部分：var+变量定义+变量定义后缀
+
+        /// <summary>
+        /// 变量说明部分：var+变量定义+变量定义后缀
+        /// </summary>
+        /// <param name="token">Token数组</param>
+        public static void Varexpl(string[][] token)
         {
-            bool f = true;
-            if (token[index][1] == keyword.VAR)
+            if (token[index][1] == Keywords.VAR)
             {
                 index++;
-                if (!Vardefi(token)) { f = false; }
-                if (!Varsuff(token)) { f = false; }
+                Vardefi(token);
+                Varsuff(token);
             }
-            return f;
         }
-        public static bool Vardefi(string[][] token)//变量定义：标识符+标识符后缀+：类型+；||标识符+标识符后缀+：+类型+；+变量定义
+
+        /// <summary>
+        /// 变量定义：标识符+标识符后缀+：类型+；||标识符+标识符后缀+：+类型+；+变量定义
+        /// </summary>
+        /// <param name="token">Token数组</param>
+        public static void Vardefi(string[][] token)
         {
-            bool f = true;
-            if (token[index][1] == keyword.ID)
+            if (token[index][1] == Keywords.ID)
             {
-                index++;Idsuff(token)
-                if (!) { f = false; }
-                if (token[index][1] == keyword.MAOHAO)
+                index++;
+                Idsuff(token);
+                if (token[index][1] == Keywords.MAOHAO)
                 {
-                    index++;
-                    if (!Typeil(token)) { f = false; }
-                    if (token[index][1] == keyword.SEM)
+                    index++; Typeil(token);
+                    if (token[index][1] == Keywords.SEM)
                     {
                         index++;
                     }
                     else
                     {
-                        Console.WriteLine("miss ';'\n");
-                        return false;
+                        error += "[\"miss a ';'\",\"" + index + "\"],";
+                        throw new ErrorException("miss a ';'", index.ToString());
                     }
                 }
                 else
                 {
-                    Console.WriteLine("miss ':'\n");
-                    return false;
+                    error += "[\"miss a ':'\",\"" + index + "\"],";
+                    throw new ErrorException("miss a ':'", index.ToString());
                 }
             }
-            return f;
         }
-        public static bool Varsuff(string[][] token)//变量后缀：变量定义+变量后缀||空
+
+        /// <summary>
+        /// 变量后缀：变量定义+变量后缀||空
+        /// </summary>
+        /// <param name="token">Token数组</param>
+        public static void Varsuff(string[][] token)
         {
-            bool f = true;
-            if (token[index][1] == keyword.ID)
+            if (token[index][1] == Keywords.ID)
             {
-                if (!Vardefi(token)) { f = false; }
-                if (!Varsuff(token)) { f = false; }
+                Vardefi(token);
+                Varsuff(token);
             }
-            return f;
         }
-        public static bool Typeil(string[][] token)//类型
+
+        /// <summary>
+        /// 类型
+        /// </summary>
+        /// <param name="token">Token数组</param>
+        public static void Typeil(string[][] token)
         {
-            if (token[index][1] == keyword.REAL || token[index][1] == keyword.BOOL || token[index][1] == keyword.INTEGER)
+            if (token[index][1] == Keywords.REAL || token[index][1] == Keywords.BOOL || token[index][1] == Keywords.INTEGER)
             {
                 index++;
             }
             else
             {
-                Console.WriteLine("wrong type of define\n");
-                return false;
+                error += "[\"wrong type of define\",\"" + index + "\"],";
+                throw new ErrorException("wrong type of define", index.ToString());
             }
-            return true;
         }
-        public static bool Compesent(string[][] token)//复合语句:begin+语句表+end
+
+        /// <summary>
+        /// 复合语句:begin+语句表+end
+        /// </summary>
+        /// <param name="token">Token数组</param>
+        public static void Compesent(string[][] token)
         {
-            bool f = true;
-            if (token[index][1] == keyword.BEGIN)
+            if (token[index][1] == Keywords.BEGIN)
             {
                 index++;
-                if (!Sentence(token)) { f = false; }
-                if (!Sentsuff(token)) { f = false; }
-                if (token[index][1] == keyword.END)
+                Sentence(token); Sentsuff(token);
+                if (token[index][1] == Keywords.END)
                 {
                     index++;
                 }
             }
             else
             {
-                Console.WriteLine("miss Begin as the start/n");
-                return false;
+                error += "[\"miss Begin as the start\",\"" + index + "\"],";
+                throw new ErrorException("miss Begin as the start", index.ToString());
             }
-            return f;
         }
-        public static bool Sentence(string[][] token)//赋值语句，if语句，while语句，复合句
+
+        /// <summary>
+        /// 赋值语句，if语句，while语句，复合句
+        /// </summary>
+        /// <param name="token">Token数组</param>
+        public static void Sentence(string[][] token)
         {
-            bool f = true;
-            if (token[index][1] == keyword.ID)
+            if (token[index][1] == Keywords.ID)
             {
-                if (!Assipro(token)) { f = false; }
+                Assipro(token);
             }
-            else if (token[index][1] == keyword.IF)
+            else if (token[index][1] == Keywords.IF)
             {
-                if (!Ifsent(token)) { f = false; }
+                Ifsent(token);
             }
-            else if (token[index][1] == keyword.WHILE)
+            else if (token[index][1] == Keywords.WHILE)
             {
-                if (!Whilesent(token)) { f = false; }
+                Whilesent(token);
             }
-            else if (token[index][1] == keyword.BEGIN)
+            else if (token[index][1] == Keywords.BEGIN)
             {
-                if (!Compesent(token)) { f = false; }
+                Compesent(token);
             }
-            return f;
         }
-        public static bool Sentsuff(string[][] token)//语句后缀：；+语句+语句后缀
+
+        /// <summary>
+        /// 语句后缀：；+语句+语句后缀
+        /// </summary>
+        /// <param name="token">Token数组</param>
+        public static void Sentsuff(string[][] token)
         {
-            bool f = true;
-            if (token[index][1] == keyword.SEM)
+            if (token[index][1] == Keywords.SEM)
             {
                 index++;
-                if (!Sentence(token)) { f = false; }
-                if (!Sentsuff(token)) { f = false; }
+                Sentence(token);
+                Sentsuff(token);
             }
-            return f;
         }
-        public static bool Assipro(string[][] token)//赋值语句
+
+        /// <summary>
+        /// 赋值语句
+        /// </summary>
+        /// <param name="token">Token数组</param>
+        public static void Assipro(string[][] token)
         {
-            bool f = true;
-            if (token[index][1] == keyword.ID)
+            if (token[index][1] == Keywords.ID)
             {
                 index++;
-                if (!Suffix(token)) { f = false; }
+                Suffix(token);
             }
             else
             {
-                Console.WriteLine("赋值语句错误\n");
-                return false;
+                error += "[\"赋值语句错误\",\"" + index + "\"],";
+                throw new ErrorException("赋值语句错误", index.ToString());
             }
-            return f;
         }
-        public static bool Suffix(string[][] token)//赋值号的后缀为赋值语句，否则为过程调用语句
-        {
-            bool f = true;
-            if (token[index][1] == keyword.FUZHI)
-            {
-                index++;
-                if (!Express(token)) { f = false; }
 
-            }
-            else if (token[index][1] == keyword.LKUOHAO)
+        /// <summary>
+        /// 赋值号的后缀为赋值语句，否则为过程调用语句
+        /// </summary>
+        /// <param name="token">Token数组</param>
+        public static void Suffix(string[][] token)
+        {
+            if (token[index][1] == Keywords.FUZHI)
             {
                 index++;
-                if (!Express(token)) { f = false; }
-                if (token[index][1] == keyword.RKUOHAO)
+                Express(token);
+            }
+            else if (token[index][1] == Keywords.LKUOHAO)
+            {
+                index++;
+                Express(token);
+                if (token[index][1] == Keywords.RKUOHAO)
                 {
                     index++;
                 }
                 else
                 {
-                    Console.WriteLine("缺少右括号\n");
-                    return false;
+                    error += "[\"缺少右括号\",\"" + index + "\"],";
+                    throw new ErrorException("缺少右括号", index.ToString());
                 }
             }
-            return f;
         }
-        public static bool Express(string[][] token)//表达式:正负号+项+项后缀
+
+        /// <summary>
+        /// 表达式:正负号+项+项后缀
+        /// </summary>
+        /// <param name="token">Token数组</param>
+        public static void Express(string[][] token)
         {
-            bool f = true;
-            if (token[index][1] == keyword.SUB)
+            if (token[index][1] == Keywords.SUB)
             {
                 index++;
-                if (!Term(token)) { f = false; }
-                if (!Termsuff(token)) { f = false; }
+                Term(token);
+                Termsuff(token);
             }
-            else if (token[index][1] == keyword.整型 || token[index][1] == keyword.实型 || token[index][1] == keyword.ID)
+            else if (token[index][1] == Keywords.整型 || token[index][1] == Keywords.实型 || token[index][1] == Keywords.ID)
             {
-                if (!Term(token)) { f = false; }
-                if (!Termsuff(token)) { f = false; }
+                Term(token);
+                Termsuff(token);
             }
-            return f;
         }
-        public static bool Exprsuff(string[][] token)//表达式后缀：，+表达式+表达式后缀
+
+        /// <summary>
+        /// 表达式后缀：，+表达式+表达式后缀
+        /// </summary>
+        /// <param name="token">Token数组</param>
+        public static void Exprsuff(string[][] token)
         {
-            bool f = true;
-            if (token[index][1] == keyword.DOUHAO)
+            if (token[index][1] == Keywords.DOUHAO)
             {
                 index++;
-                if (!Express(token)) { f = false; }
-                if (!Exprsuff(token)) { f = false; }
+                Express(token);
+                Exprsuff(token);
             }
-            return f;
         }
-        public static bool Term(string[][] token)//项：因子+因子后缀
+
+        /// <summary>
+        /// 项：因子+因子后缀
+        /// </summary>
+        /// <param name="token">Token数组</param>
+        public static void Term(string[][] token)
         {
-            bool f = true;
-            if (!Factor(token)) { f = false; }
-            if (!Factsuff(token)) { f = false; }
-            return f;
+            Factor(token);
+            Factsuff(token);
         }
-        public static bool Termsuff(string[][] token)//项后缀：加减运算符+因子+因子后缀or空
+
+        /// <summary>
+        /// 项后缀：加减运算符+因子+因子后缀or空
+        /// </summary>
+        /// <param name="token">Token数组</param>
+        public static void Termsuff(string[][] token)
         {
-            bool f = true;
-            if (token[index][1] == keyword.ADD || token[index][1] == keyword.SUB)
+            if (token[index][1] == Keywords.ADD || token[index][1] == Keywords.SUB)
             {
                 index++;
-                if (!Factor(token)) { f = false; }
-                if (!Factsuff(token)) { f = false; }
+                Factor(token);
+                Factsuff(token);
             }
-            return f;
         }
-        public static bool Factsuff(string[][] token)//因子后缀：因子+因子后缀or空
+
+        /// <summary>
+        /// 因子后缀：因子+因子后缀or空
+        /// </summary>
+        /// <param name="token">Token数组</param>
+        public static void Factsuff(string[][] token)
         {
-            bool f = true;
-            if (token[index][1] == keyword.MUL || token[index][1] == keyword.DIV)
+            if (token[index][1] == Keywords.MUL || token[index][1] == Keywords.DIV)
             {
                 index++;
-                if (!Factor(token)) { f = false; }
-                if (!Factsuff(token)) { f = false; }
+                Factor(token);
+                Factsuff(token);
             }
-            return f;
         }
-        public static bool Factor(string[][] token)//因子：标识符+整数，实数+括号内的表达式
+
+        /// <summary>
+        /// 因子：标识符+整数，实数+括号内的表达式
+        /// </summary>
+        /// <param name="token">Token数组</param>
+        public static void Factor(string[][] token)
         {
-            bool f = true;
-            if (token[index][1] == keyword.ID)
+            if (token[index][1] == Keywords.ID)
             {
                 index++;
-                if (!Factsuff(token)) { f = false; }
+                Factsuff(token);
             }
-            else if (token[index][1] == keyword.整型 || token[index][1] == keyword.实型)
+            else if (token[index][1] == Keywords.整型 || token[index][1] == Keywords.实型)
             {
                 index++;
-                if (!Factsuff(token)) { f = false; }
+                Factsuff(token);
             }
         }
     }

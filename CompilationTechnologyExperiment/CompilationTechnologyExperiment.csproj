@@ -59,10 +59,10 @@
       <DependentUpon>ErrorMessageResource.resx</DependentUpon>
     </Compile>
     <Compile Include="IdentifyResource.cs" />
-    <Compile Include="keyword.Designer.cs">
+    <Compile Include="Keywords.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>keyword.resx</DependentUpon>
+      <DependentUpon>Keywords.resx</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -90,9 +90,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ErrorMessageResource.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="keyword.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>keyword.Designer.cs</LastGenOutput>
+    <EmbeddedResource Include="Keywords.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Keywords.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

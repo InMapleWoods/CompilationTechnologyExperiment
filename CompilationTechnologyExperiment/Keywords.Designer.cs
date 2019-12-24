@@ -19,27 +19,27 @@ namespace CompilationTechnologyExperiment {
     // 类通过类似于 ResGen 或 Visual Studio 的工具自动生成的。
     // 若要添加或移除成员，请编辑 .ResX 文件，然后重新运行 ResGen
     // (以 /str 作为命令选项)，或重新生成 VS 项目。
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class keyword {
+    internal class Keywords {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal keyword() {
+        internal Keywords() {
         }
         
         /// <summary>
         ///   返回此类使用的缓存的 ResourceManager 实例。
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Resources.ResourceManager ResourceManager {
+        internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("CompilationTechnologyExperiment.keyword", typeof(keyword).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("CompilationTechnologyExperiment.Keywords", typeof(Keywords).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -51,7 +51,7 @@ namespace CompilationTechnologyExperiment {
         ///   重写当前线程的 CurrentUICulture 属性。
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Globalization.CultureInfo Culture {
+        internal static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 29 的本地化字符串。
         /// </summary>
-        public static string ADD {
+        internal static string ADD {
             get {
                 return ResourceManager.GetString("ADD", resourceCulture);
             }
@@ -72,7 +72,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 26 的本地化字符串。
         /// </summary>
-        public static string AND {
+        internal static string AND {
             get {
                 return ResourceManager.GetString("AND", resourceCulture);
             }
@@ -81,7 +81,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 1 的本地化字符串。
         /// </summary>
-        public static string BEGIN {
+        internal static string BEGIN {
             get {
                 return ResourceManager.GetString("BEGIN", resourceCulture);
             }
@@ -90,7 +90,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 5 的本地化字符串。
         /// </summary>
-        public static string BOOL {
+        internal static string BOOL {
             get {
                 return ResourceManager.GetString("BOOL", resourceCulture);
             }
@@ -99,7 +99,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 4 的本地化字符串。
         /// </summary>
-        public static string CHAR {
+        internal static string CHAR {
             get {
                 return ResourceManager.GetString("CHAR", resourceCulture);
             }
@@ -108,7 +108,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 25 的本地化字符串。
         /// </summary>
-        public static string CONST {
+        internal static string CONST {
             get {
                 return ResourceManager.GetString("CONST", resourceCulture);
             }
@@ -117,7 +117,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 53 的本地化字符串。
         /// </summary>
-        public static string DANYH {
+        internal static string DANYH {
             get {
                 return ResourceManager.GetString("DANYH", resourceCulture);
             }
@@ -126,7 +126,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 35 的本地化字符串。
         /// </summary>
-        public static string DAYU {
+        internal static string DAYU {
             get {
                 return ResourceManager.GetString("DAYU", resourceCulture);
             }
@@ -135,7 +135,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 37 的本地化字符串。
         /// </summary>
-        public static string DEQU {
+        internal static string DEQU {
             get {
                 return ResourceManager.GetString("DEQU", resourceCulture);
             }
@@ -144,7 +144,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 49 的本地化字符串。
         /// </summary>
-        public static string DIAN {
+        internal static string DIAN {
             get {
                 return ResourceManager.GetString("DIAN", resourceCulture);
             }
@@ -153,7 +153,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 32 的本地化字符串。
         /// </summary>
-        public static string DIV {
+        internal static string DIV {
             get {
                 return ResourceManager.GetString("DIV", resourceCulture);
             }
@@ -162,7 +162,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 16 的本地化字符串。
         /// </summary>
-        public static string DO {
+        internal static string DO {
             get {
                 return ResourceManager.GetString("DO", resourceCulture);
             }
@@ -171,7 +171,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 51 的本地化字符串。
         /// </summary>
-        public static string DOUHAO {
+        internal static string DOUHAO {
             get {
                 return ResourceManager.GetString("DOUHAO", resourceCulture);
             }
@@ -180,7 +180,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 21 的本地化字符串。
         /// </summary>
-        public static string ELSE {
+        internal static string ELSE {
             get {
                 return ResourceManager.GetString("ELSE", resourceCulture);
             }
@@ -189,7 +189,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 2 的本地化字符串。
         /// </summary>
-        public static string END {
+        internal static string END {
             get {
                 return ResourceManager.GetString("END", resourceCulture);
             }
@@ -198,7 +198,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 33 的本地化字符串。
         /// </summary>
-        public static string EQU {
+        internal static string EQU {
             get {
                 return ResourceManager.GetString("EQU", resourceCulture);
             }
@@ -207,7 +207,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 23 的本地化字符串。
         /// </summary>
-        public static string FALSE {
+        internal static string FALSE {
             get {
                 return ResourceManager.GetString("FALSE", resourceCulture);
             }
@@ -216,7 +216,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 13 的本地化字符串。
         /// </summary>
-        public static string FOR {
+        internal static string FOR {
             get {
                 return ResourceManager.GetString("FOR", resourceCulture);
             }
@@ -225,7 +225,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 39 的本地化字符串。
         /// </summary>
-        public static string FUZHI {
+        internal static string FUZHI {
             get {
                 return ResourceManager.GetString("FUZHI", resourceCulture);
             }
@@ -234,7 +234,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 40 的本地化字符串。
         /// </summary>
-        public static string ID {
+        internal static string ID {
             get {
                 return ResourceManager.GetString("ID", resourceCulture);
             }
@@ -243,7 +243,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 19 的本地化字符串。
         /// </summary>
-        public static string IF {
+        internal static string IF {
             get {
                 return ResourceManager.GetString("IF", resourceCulture);
             }
@@ -252,7 +252,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 8 的本地化字符串。
         /// </summary>
-        public static string INPUT {
+        internal static string INPUT {
             get {
                 return ResourceManager.GetString("INPUT", resourceCulture);
             }
@@ -261,7 +261,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 3 的本地化字符串。
         /// </summary>
-        public static string INTEGER {
+        internal static string INTEGER {
             get {
                 return ResourceManager.GetString("INTEGER", resourceCulture);
             }
@@ -270,7 +270,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 46 的本地化字符串。
         /// </summary>
-        public static string LKUOHAO {
+        internal static string LKUOHAO {
             get {
                 return ResourceManager.GetString("LKUOHAO", resourceCulture);
             }
@@ -279,7 +279,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 48 的本地化字符串。
         /// </summary>
-        public static string MAOHAO {
+        internal static string MAOHAO {
             get {
                 return ResourceManager.GetString("MAOHAO", resourceCulture);
             }
@@ -288,7 +288,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 31 的本地化字符串。
         /// </summary>
-        public static string MUL {
+        internal static string MUL {
             get {
                 return ResourceManager.GetString("MUL", resourceCulture);
             }
@@ -297,7 +297,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 28 的本地化字符串。
         /// </summary>
-        public static string NOT {
+        internal static string NOT {
             get {
                 return ResourceManager.GetString("NOT", resourceCulture);
             }
@@ -306,7 +306,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 27 的本地化字符串。
         /// </summary>
-        public static string OR {
+        internal static string OR {
             get {
                 return ResourceManager.GetString("OR", resourceCulture);
             }
@@ -315,7 +315,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 9 的本地化字符串。
         /// </summary>
-        public static string OUTPUT {
+        internal static string OUTPUT {
             get {
                 return ResourceManager.GetString("OUTPUT", resourceCulture);
             }
@@ -324,7 +324,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 10 的本地化字符串。
         /// </summary>
-        public static string PROGRAM {
+        internal static string PROGRAM {
             get {
                 return ResourceManager.GetString("PROGRAM", resourceCulture);
             }
@@ -333,7 +333,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 11 的本地化字符串。
         /// </summary>
-        public static string READ {
+        internal static string READ {
             get {
                 return ResourceManager.GetString("READ", resourceCulture);
             }
@@ -342,7 +342,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 6 的本地化字符串。
         /// </summary>
-        public static string REAL {
+        internal static string REAL {
             get {
                 return ResourceManager.GetString("REAL", resourceCulture);
             }
@@ -351,7 +351,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 17 的本地化字符串。
         /// </summary>
-        public static string REPEAT {
+        internal static string REPEAT {
             get {
                 return ResourceManager.GetString("REPEAT", resourceCulture);
             }
@@ -360,7 +360,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 47 的本地化字符串。
         /// </summary>
-        public static string RKUOHAO {
+        internal static string RKUOHAO {
             get {
                 return ResourceManager.GetString("RKUOHAO", resourceCulture);
             }
@@ -369,7 +369,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 50 的本地化字符串。
         /// </summary>
-        public static string SEM {
+        internal static string SEM {
             get {
                 return ResourceManager.GetString("SEM", resourceCulture);
             }
@@ -378,7 +378,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 54 的本地化字符串。
         /// </summary>
-        public static string SHUANGYH {
+        internal static string SHUANGYH {
             get {
                 return ResourceManager.GetString("SHUANGYH", resourceCulture);
             }
@@ -387,7 +387,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 7 的本地化字符串。
         /// </summary>
-        public static string STRING {
+        internal static string STRING {
             get {
                 return ResourceManager.GetString("STRING", resourceCulture);
             }
@@ -396,7 +396,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 30 的本地化字符串。
         /// </summary>
-        public static string SUB {
+        internal static string SUB {
             get {
                 return ResourceManager.GetString("SUB", resourceCulture);
             }
@@ -405,7 +405,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 20 的本地化字符串。
         /// </summary>
-        public static string THEN {
+        internal static string THEN {
             get {
                 return ResourceManager.GetString("THEN", resourceCulture);
             }
@@ -414,7 +414,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 14 的本地化字符串。
         /// </summary>
-        public static string TO {
+        internal static string TO {
             get {
                 return ResourceManager.GetString("TO", resourceCulture);
             }
@@ -423,7 +423,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 22 的本地化字符串。
         /// </summary>
-        public static string TRUE {
+        internal static string TRUE {
             get {
                 return ResourceManager.GetString("TRUE", resourceCulture);
             }
@@ -432,7 +432,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 38 的本地化字符串。
         /// </summary>
-        public static string UNEQU {
+        internal static string UNEQU {
             get {
                 return ResourceManager.GetString("UNEQU", resourceCulture);
             }
@@ -441,7 +441,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 18 的本地化字符串。
         /// </summary>
-        public static string UNTIL {
+        internal static string UNTIL {
             get {
                 return ResourceManager.GetString("UNTIL", resourceCulture);
             }
@@ -450,7 +450,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 24 的本地化字符串。
         /// </summary>
-        public static string VAR {
+        internal static string VAR {
             get {
                 return ResourceManager.GetString("VAR", resourceCulture);
             }
@@ -459,7 +459,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 15 的本地化字符串。
         /// </summary>
-        public static string WHILE {
+        internal static string WHILE {
             get {
                 return ResourceManager.GetString("WHILE", resourceCulture);
             }
@@ -468,7 +468,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 12 的本地化字符串。
         /// </summary>
-        public static string WRITE {
+        internal static string WRITE {
             get {
                 return ResourceManager.GetString("WRITE", resourceCulture);
             }
@@ -477,7 +477,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 36 的本地化字符串。
         /// </summary>
-        public static string XEQU {
+        internal static string XEQU {
             get {
                 return ResourceManager.GetString("XEQU", resourceCulture);
             }
@@ -486,7 +486,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 52 的本地化字符串。
         /// </summary>
-        public static string XHX {
+        internal static string XHX {
             get {
                 return ResourceManager.GetString("XHX", resourceCulture);
             }
@@ -495,7 +495,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 34 的本地化字符串。
         /// </summary>
-        public static string XIAOYU {
+        internal static string XIAOYU {
             get {
                 return ResourceManager.GetString("XIAOYU", resourceCulture);
             }
@@ -504,7 +504,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 45 的本地化字符串。
         /// </summary>
-        public static string 字符串型 {
+        internal static string 字符串型 {
             get {
                 return ResourceManager.GetString("字符串型", resourceCulture);
             }
@@ -513,7 +513,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 43 的本地化字符串。
         /// </summary>
-        public static string 字符型 {
+        internal static string 字符型 {
             get {
                 return ResourceManager.GetString("字符型", resourceCulture);
             }
@@ -522,7 +522,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 42 的本地化字符串。
         /// </summary>
-        public static string 实型 {
+        internal static string 实型 {
             get {
                 return ResourceManager.GetString("实型", resourceCulture);
             }
@@ -531,7 +531,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 44 的本地化字符串。
         /// </summary>
-        public static string 布尔型 {
+        internal static string 布尔型 {
             get {
                 return ResourceManager.GetString("布尔型", resourceCulture);
             }
@@ -540,7 +540,7 @@ namespace CompilationTechnologyExperiment {
         /// <summary>
         ///   查找类似 41 的本地化字符串。
         /// </summary>
-        public static string 整型 {
+        internal static string 整型 {
             get {
                 return ResourceManager.GetString("整型", resourceCulture);
             }
