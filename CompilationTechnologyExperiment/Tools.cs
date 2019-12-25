@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -164,26 +165,14 @@ namespace CompilationTechnologyExperiment
         /// </summary>
         /// <param name="input">字符串</param>
         /// <returns>数组内容</returns>
-        public static string[][] GetJsonObject(string input)
+        public static object GetJsonObject(string input)
         {
             if (string.IsNullOrEmpty(input))
             {
                 throw new ErrorException(ErrorMessageResource.FileEmptyError);
             }
-            List<string[]> output = new List<string[]>();
             dynamic JSONObject = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(input);
-            foreach (var i in JSONObject)
-            {
-                if (i.Count == 2)
-                {
-                    output.Add(new string[] { i[1], i[0] });
-                }
-                else if (i.Count == 3)
-                {
-                    output.Add(new string[] { i[1], i[0], i[2] });
-                }
-            }
-            return output.ToArray();
+            return JSONObject;
         }
         /// <summary>
         /// 获取文件内容
@@ -211,4 +200,57 @@ namespace CompilationTechnologyExperiment
 
     }
 
+    /// <summary>
+    /// Token类
+    /// </summary>
+    public class Token
+    {
+        /// <summary>
+        /// 单词序号
+        /// </summary>
+        public int Label { set; get; }
+        /// <summary>
+        /// 单词本身
+        /// </summary>
+        public string Name { set; get; }
+        /// <summary>
+        /// 单词种别编码
+        /// </summary>
+        public int Code { set; get; }
+        /// <summary>
+        /// 单词在符号表中登记项的指针，仅用于标识符或常数，其他情况下为0
+        /// </summary>
+        public int Addr { set; get; }
+        public Token()
+        {
+        }
+    }
+
+    /// <summary>
+    /// Symbol类
+    /// </summary>
+    public class Symbol
+    {
+        /// <summary>
+        /// 序号
+        /// </summary>
+        public int Number { set; get; }
+        /// <summary>
+        /// 类型
+        /// </summary>
+        public int Type { set; get; }
+        /// <summary>
+        /// 名字
+        /// </summary>
+        public string Name { set; get; }
+        public List<string[]> Wait { set; get; }
+        /// <summary>
+        /// 初始化
+        /// </summary>
+        public Symbol()
+        {
+            Wait = new List<string[]>();
+            Wait.Add(new string[2] { "0", "N" });
+        }
+    }
 }

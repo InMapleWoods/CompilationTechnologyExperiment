@@ -9,6 +9,8 @@ namespace CompilationTechnologyExperiment
     /// </summary>
     public static partial class FileScanner
     {
+        public static List<Token> tokens { get; set; } = new List<Token>();
+        public static List<Symbol> symbols{ get; set; } = new List<Symbol>();
         private static string error = "";
         private static int count = 0;
         /// <summary>
@@ -25,8 +27,10 @@ namespace CompilationTechnologyExperiment
             try
             {
                 var values = GetContentKeyValues(ProcessContent(Tools.GetFileContent(fileName)));
-                token = GetTokenFile(values);
-                symbol = GetSymbolFile(values);
+                GetTokens(values);
+                GetSymbols();
+                token = GetTokenFile(tokens);
+                symbol = GetSymbolFile(symbols);
             }
             catch
             {
@@ -358,43 +362,21 @@ namespace CompilationTechnologyExperiment
         }
         #endregion
 
+
         /// <summary>
         /// 获取符号表文件字符串（JSON格式）
         /// </summary>
-        /// <param name="fileName">文件名</param>
+        /// <param name="symbols">Symbol表</param>
         /// <returns>符号表文件字符串</returns>
-        public static string GetSymbolFile(List<KeyValuePair<string, int>> values)
+        public static string GetSymbolFile(List<Symbol> symbols)
         {
             try
             {
-                if (values == null)
+                if (symbols == null)
                 {
                     return "";
                 }
-                string str = "[";
-                for (int i = 0; i < values.Count; i++)
-                {
-                    if (i != values.Count - 2)
-                    {
-                        if (values[i].Value >= 3 && values[i].Value <= 7)
-                        {
-                            str += "[\"" + Tools.GetSymbolType(values[i].Value) + "\",\"" + values[i].Key + "\"," + i + "],";
-                            i++;
-                            continue;
-                        }
-                    }
-                    if (values[i].Value >= 41 && values[i].Value <= 45)
-                    {
-                        str += "[\"" + Tools.GetSymbolType(values[i].Value) + "\",\"" + values[i].Key + "\"," + i + "],";
-                    }
-                    if (values[i].Value == 22 || values[i].Value == 23)
-                    {
-                        str += "[\"" + Tools.GetSymbolType(values[i].Value) + "\",\"" + values[i].Key + "\"," + i + "],";
-                    }
-                }
-                str = str.Substring(0, str.Length - 1);
-                str += "]";
-                return str;
+                return Newtonsoft.Json.JsonConvert.SerializeObject(symbols);
             }
             catch (ErrorException e)
             {
@@ -404,26 +386,81 @@ namespace CompilationTechnologyExperiment
         /// <summary>
         /// 获取token文件字符串（JSON格式）
         /// </summary>
-        /// <param name="fileName">文件名</param>
+        /// <param name="tokens">Token表</param>
         /// <returns>token文件字符串</returns>
-        public static string GetTokenFile(List<KeyValuePair<string, int>> values)
+        public static string GetTokenFile(List<Token> tokens)
+        {
+            try
+            {
+                if (tokens == null)
+                {
+                    return "";
+                }
+                return Newtonsoft.Json.JsonConvert.SerializeObject(tokens);
+            }
+            catch (ErrorException e)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// 获取tokens
+        /// </summary>
+        /// <param name="values">值表</param>
+        /// <returns>token表</returns>
+        public static void GetTokens(List<KeyValuePair<string, int>> values)
         {
             try
             {
                 if (values == null)
                 {
-                    return "";
+                    return;
                 }
-                int index = 0;
-                string str = "[";
                 foreach (var i in values)
                 {
-                    index++;
-                    str += "[" + index + ",\"" + i.Value + "\",\"" + i.Key + "\"],";
+                    Token token = new Token();
+                    token.Label = tokens.Count;
+                    token.Name = i.Key;
+                    token.Code = i.Value;
+                    token.Addr = symbols.Count;
+                    Symbol symbol = new Symbol();
+                    symbol.Number = token.Addr;
+                    symbol.Name = i.Key;
+                    symbol.Type = i.Value;
+                    symbols.Add(symbol);
+                    tokens.Add(token);
                 }
-                str = str.Substring(0, str.Length - 1);
-                str += "]";
-                return str;
+            }
+            catch (ErrorException e)
+            {
+                throw;
+            }
+        }
+        /// <summary>
+        /// 获取symbols
+        /// </summary>
+        /// <param name="values">值表</param>
+        /// <returns>token表</returns>
+        public static void GetSymbols()
+        {
+            try
+            {
+                for (int i = 0; i < tokens.Count; i++)
+                {
+                    if (tokens[i].Code == 9 || tokens[i].Code == 3 || tokens[i].Code == 13)//类型为integer或bool或real
+                    {
+                        int j = i;
+                        j = j - 2;
+                        symbols[tokens[j].Addr].Type = tokens[i].Code;//类型定义正确，在符号表中记录该标识符的类型
+                        j--;
+                        while (tokens[j].Code == 28)// 若标识符后面有逗号，表示同时定义了几个相同类型的变量，把它们都添加到符号表中
+                        {
+                            j--;
+                            symbols[tokens[j].Addr].Type = tokens[i].Code;
+                        }
+                    }
+                }
             }
             catch (ErrorException e)
             {

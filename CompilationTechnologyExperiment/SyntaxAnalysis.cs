@@ -31,51 +31,6 @@ namespace CompilationTechnologyExperiment
         }
 
         /// <summary>
-        /// 获取符号表
-        /// </summary>
-        /// <returns>符号表数组</returns>
-        private static string[][] GetSymbol()
-        {
-            string[][] Symbols = Tools.GetJsonObject(Tools.GetFileContent("Symbol.txt"));
-            return Symbols;
-        }
-
-        /// <summary>
-        /// 获取Token表
-        /// </summary>
-        /// <returns>Token数组</returns>
-        private static string[][] GetToken()
-        {
-            string[][] Tokens = Tools.GetJsonObject(Tools.GetFileContent("Token.txt"));
-            List<string[]> list = new List<string[]>();
-            foreach (var i in Tokens)
-            {
-                int attr = GetAttrInSymbol(i[0]);
-                list.Add(new string[] { i[2], i[0], attr.ToString() });
-            }
-            tokenLength = list.Count;
-            return list.ToArray();
-        }
-
-        /// <summary>
-        /// 获取Token在符号表中的位置
-        /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
-        private static int GetAttrInSymbol(string key)
-        {
-            string[][] list = GetSymbol();
-            for (int i = 0; i < list.Length; i++)
-            {
-                if (key == list[i][0])
-                {
-                    return i;
-                }
-            }
-            return -1;
-        }
-
-        /// <summary>
         /// 当前Token的索引
         /// </summary>
         private static int index = 0;
@@ -86,7 +41,8 @@ namespace CompilationTechnologyExperiment
         /// <returns>分析结果</returns>
         public static bool AnalysisResult()
         {
-            string[][] token = GetToken();//token[0]="real" token[1]=42 token[2]=attr
+            List<Token> token = FileScanner.tokens;//token[0]="real" token[1]=42 token[2]=attr
+            tokenLength = token.Count;
             try
             {
                 Proghead(token);
@@ -126,12 +82,12 @@ namespace CompilationTechnologyExperiment
         /// 分析程序头
         /// </summary>
         /// <param name="token">Token数组</param>
-        private static void Proghead(string[][] token)
+        private static void Proghead(List<Token> token)
         {
-            if (token[index][1] == Keywords.PROGRAM)//含有program
+            if (token[index].Code.ToString() == Keywords.PROGRAM)//含有program
             {
                 Next();
-                if (token[index][1] == Keywords.ID)//是标识符
+                if (token[index].Code.ToString() == Keywords.ID)//是标识符
                 {
 
                     Next();
@@ -154,14 +110,14 @@ namespace CompilationTechnologyExperiment
         /// 程序体部分（变量说明，复合句）
         /// </summary>
         /// <param name="token">Token数组</param>
-        private static void ProBody(string[][] token)
+        private static void ProBody(List<Token> token)
         {
-            if (token[index][1] == Keywords.VAR)//如果是var
+            if (token[index].Code.ToString() == Keywords.VAR)//如果是var
             {
                 Next();
                 Varexpl(token);//执行变量定义
             }
-            else if (token[index][1] == Keywords.BEGIN)//如果是begin
+            else if (token[index].Code.ToString() == Keywords.BEGIN)//如果是begin
             {
                 Next();
                 Compesent(token);//执行复合句
@@ -177,21 +133,21 @@ namespace CompilationTechnologyExperiment
         /// 变量说明部分:〈变量定义〉→〈标识符表〉：〈类型〉；｜〈标识符表〉：〈类型〉；〈变量定义〉
         /// </summary>
         /// <param name="token">Token数组</param>
-        private static void Varexpl(string[][] token)
+        private static void Varexpl(List<Token> token)
         {
             if (IsIdlist(token))//若该字符为标识符，则判断下一个字符，若为冒号，继续判断类型定义是否正确
             {
                 Next();
-                if (token[index][1] == Keywords.MAOHAO)//冒号
+                if (token[index].Code.ToString() == Keywords.MAOHAO)//冒号
                 {
                     Next();
-                    if (token[index][1] == Keywords.INTEGER || token[index][1] == Keywords.BOOL || token[index][1] == Keywords.CHAR || token[index][1] == Keywords.STRING || token[index][1] == Keywords.REAL)//类型为
+                    if (token[index].Code.ToString() == Keywords.INTEGER || token[index].Code.ToString() == Keywords.BOOL || token[index].Code.ToString() == Keywords.CHAR || token[index].Code.ToString() == Keywords.STRING || token[index].Code.ToString() == Keywords.REAL)//类型为
                     {
                         Next();
-                        if (token[index][1] == Keywords.SEM)//如果是分号，判断下一个单词，若为begin，执行复合句；否则继续循环执行变量定义
+                        if (token[index].Code.ToString() == Keywords.SEM)//如果是分号，判断下一个单词，若为begin，执行复合句；否则继续循环执行变量定义
                         {
                             Next();
-                            if (token[index][1] == Keywords.BEGIN)//含有begin
+                            if (token[index].Code.ToString() == Keywords.BEGIN)//含有begin
                             {
                                 Next();
                                 Compesent(token);//执行复合句
@@ -231,12 +187,12 @@ namespace CompilationTechnologyExperiment
         /// 判断是不是标识符表 IsIdlist//〈标识符表〉→〈标识符〉，〈标识符表〉｜〈标识符〉
         /// </summary>
         /// <returns>是不是标识符</returns>
-        private static bool IsIdlist(string[][] token)
+        private static bool IsIdlist(List<Token> token)
         {
-            if (token[index][1] == Keywords.ID)//标识符
+            if (token[index].Code.ToString() == Keywords.ID)//标识符
             {//若是标识符，判断下一个字符，如果是逗号，继续判断下一个字符，如果不是逗号，指向前一个字符，返回true，否则返回false——此方法用来判断是否将几个变量定义为同一个类型
                 Next();
-                if (token[index][1] == Keywords.DOUHAO)//逗号
+                if (token[index].Code.ToString() == Keywords.DOUHAO)//逗号
                 {
                     Next();
                     return IsIdlist(token);//下一个字符若为逗号，则继续循环执行判断是否为标识符表
@@ -257,10 +213,10 @@ namespace CompilationTechnologyExperiment
         /// 复合语句:begin+语句表+end
         /// </summary>
         /// <param name="token">Token数组</param>
-        private static void Compesent(string[][] token)
+        private static void Compesent(List<Token> token)
         {
             SentList(token);//执行语句表
-            if (token[index][1] == Keywords.SEM && token[index + 1][1] == Keywords.END)//end
+            if (token[index].Code.ToString() == Keywords.SEM && token[index + 1].Code.ToString() == Keywords.END)//end
             {
                 return;
             }
@@ -276,11 +232,11 @@ namespace CompilationTechnologyExperiment
         /// 语句表SentList//〈语句表〉→〈执行句〉；〈语句表〉｜〈执行句〉
         /// </summary>
         /// <param name="token">Token数组</param>
-        private static void SentList(string[][] token)
+        private static void SentList(List<Token> token)
         {
             ExecSent(token);//执行句
             Next();
-            if (token[index][1] == Keywords.SEM)//若为分号，继续循环执行语句表
+            if (token[index].Code.ToString() == Keywords.SEM)//若为分号，继续循环执行语句表
             {
                 Next();
                 SentList(token);
@@ -295,14 +251,14 @@ namespace CompilationTechnologyExperiment
         /// 执行句ExecSent//〈执行句〉→〈简单句〉｜〈结构句〉//〈简单句〉→〈赋值句〉
         /// </summary>
         /// <param name="token">Token数组</param>
-        private static void ExecSent(string[][] token)
+        private static void ExecSent(List<Token> token)
         {
-            if (token[index][1] == Keywords.ID)//标识符如果是标识符，为简单句
+            if (token[index].Code.ToString() == Keywords.ID)//标识符如果是标识符，为简单句
             {
                 Next();
                 AssiSent(token);//赋值句
             }
-            else if (token[index][1] == Keywords.BEGIN || token[index][1] == Keywords.IF || token[index][1] == Keywords.WHILE)//begin，if，while的机内码
+            else if (token[index].Code.ToString() == Keywords.BEGIN || token[index].Code.ToString() == Keywords.IF || token[index].Code.ToString() == Keywords.WHILE)//begin，if，while的机内码
             {
                 StructSent(token);//结构句
             }
@@ -316,9 +272,9 @@ namespace CompilationTechnologyExperiment
         /// 赋值句AssiSent//〈赋值句〉→〈变量〉：＝〈表达式〉
         /// </summary>
         /// <param name="token">Token数组</param>
-        private static void AssiSent(string[][] token)
+        private static void AssiSent(List<Token> token)
         {
-            if (token[index][1] == Keywords.FUZHI)//:=
+            if (token[index].Code.ToString() == Keywords.FUZHI)//:=
             {
                 Next();
                 Expression(token);//表达式
@@ -334,10 +290,10 @@ namespace CompilationTechnologyExperiment
         /// 表达式Expression//〈表达式〉→〈算术表达式〉｜〈布尔表达式〉
         /// </summary>
         /// <param name="token">Token数组</param>
-        private static void Expression(string[][] token)
+        private static void Expression(List<Token> token)
         {
-            int symbolIndex = int.Parse(token[index][2]);
-            if (token[index][1] == Keywords.FALSE || token[index][1] == Keywords.TRUE || (symbolIndex != -1 && GetSymbol()[symbolIndex][0] == "布尔型"))//false或true或单词为保留字且在符号表中的类型为bool型
+            int symbolIndex = token[index].Addr;
+            if (token[index].Code.ToString() == Keywords.FALSE || token[index].Code.ToString() == Keywords.TRUE || (symbolIndex != -1 && FileScanner.symbols[symbolIndex].Type.ToString() == Keywords.布尔型))//false或true或单词为保留字且在符号表中的类型为bool型
             {
                 BoolExp(token);//布尔表达式
             }
@@ -351,11 +307,11 @@ namespace CompilationTechnologyExperiment
         /// 布尔表达式BoolExp//〈布尔表达式〉→〈布尔表达式〉or〈布尔项〉｜〈布尔项〉
         /// </summary>
         /// <param name="token">Token数组</param>
-        private static void BoolExp(string[][] token)
+        private static void BoolExp(List<Token> token)
         {
             BoolItem(token);//布尔项
             Next();
-            if (token[index][1] == Keywords.OR)//or
+            if (token[index].Code.ToString() == Keywords.OR)//or
             {
                 Next();
                 BoolExp(token);
@@ -370,11 +326,11 @@ namespace CompilationTechnologyExperiment
         /// 布尔项BoolItem//〈布尔项〉→〈布尔项〉and〈布尔因子〉｜〈布尔因子〉
         /// </summary>
         /// <param name="token">Token数组</param>
-        private static void BoolItem(string[][] token)
+        private static void BoolItem(List<Token> token)
         {
             BoolFactor(token);//布尔因子
             Next();
-            if (token[index][1] == Keywords.END)//and
+            if (token[index].Code.ToString() == Keywords.END)//and
             {
                 Next();
                 BoolItem(token);//布尔项
@@ -390,9 +346,9 @@ namespace CompilationTechnologyExperiment
         /// 布尔因子BoolFactor//〈布尔因子〉→ not〈布尔因子〉｜〈布尔量〉
         /// </summary>
         /// <param name="token">Token数组</param>
-        private static void BoolFactor(string[][] token)
+        private static void BoolFactor(List<Token> token)
         {
-            if (token[index][1] == Keywords.NOT)//not
+            if (token[index].Code.ToString() == Keywords.NOT)//not
             {
                 Next();
                 BoolFactor(token);//布尔因子
@@ -407,19 +363,19 @@ namespace CompilationTechnologyExperiment
         /// 布尔量BoolValue//〈布尔量〉→〈布尔常数〉｜〈标识符〉｜（〈布尔表达式〉）｜〈关系表达式〉
         /// </summary>
         /// <param name="token">Token数组</param>
-        private static void BoolValue(string[][] token)
+        private static void BoolValue(List<Token> token)
         {
-            if (token[index][1] == Keywords.TRUE || token[index][1] == Keywords.FALSE)//true或false
+            if (token[index].Code.ToString() == Keywords.TRUE || token[index].Code.ToString() == Keywords.FALSE)//true或false
             {
                 return;
             }
-            else if (token[index][1] == Keywords.ID)//标识符（关系表达式）
+            else if (token[index].Code.ToString() == Keywords.ID)//标识符（关系表达式）
             {
                 Next();
-                if (int.Parse(token[index][1]) >= 33 && int.Parse(token[index][1]) <= 38)
+                if (int.Parse(token[index].Code.ToString()) >= 33 && int.Parse(token[index].Code.ToString()) <= 38)
                 {//==或>或<或<>或<=或>=
                     Next();
-                    if (token[index][1] == Keywords.ID)//标识符
+                    if (token[index].Code.ToString() == Keywords.ID)//标识符
                     {
                     }
                     else
@@ -433,10 +389,10 @@ namespace CompilationTechnologyExperiment
                     Before();
                 }
             }
-            else if (token[index][1] == Keywords.LKUOHAO)//字符为（，即布尔表达式
+            else if (token[index].Code.ToString() == Keywords.LKUOHAO)//字符为（，即布尔表达式
             {
                 BoolExp(token);//执行布尔表达式
-                if (token[index][1] == Keywords.RKUOHAO)//字符为）
+                if (token[index].Code.ToString() == Keywords.RKUOHAO)//字符为）
                 {
                     return;
                 }
@@ -457,12 +413,12 @@ namespace CompilationTechnologyExperiment
         /// 算术表达式 AritExp//〈算术表达式〉→〈算术表达式〉＋〈项〉｜〈算术表达式〉－〈项〉｜〈项〉
         /// </summary>
         /// <param name="token">Token数组</param>
-        private static void AritExp(string[][] token)
+        private static void AritExp(List<Token> token)
         {
             Item(token);//执行项
 
             Next();
-            if (token[index][1] == Keywords.ADD || token[index][1] == Keywords.SUB)//符号为+或-
+            if (token[index].Code.ToString() == Keywords.ADD || token[index].Code.ToString() == Keywords.SUB)//符号为+或-
             {
                 Next();
                 AritExp(token);//执行算术表达式
@@ -479,11 +435,11 @@ namespace CompilationTechnologyExperiment
         /// 项 Item//〈项〉→〈项〉＊〈因子〉｜〈项〉／〈因子〉｜〈因子〉
         /// </summary>
         /// <param name="token">Token数组</param>
-        private static void Item(string[][] token)
+        private static void Item(List<Token> token)
         {
             Factor(token);//执行因子
             Next();
-            if (token[index][1] == Keywords.MUL || token[index][1] == Keywords.DIV)//符号为*或/
+            if (token[index].Code.ToString() == Keywords.MUL || token[index].Code.ToString() == Keywords.DIV)//符号为*或/
             {
                 Next();
                 Item(token);//执行项
@@ -499,14 +455,14 @@ namespace CompilationTechnologyExperiment
         /// 因子Factor//〈因子〉→〈算术量〉｜（〈算术表达式〉）
         /// </summary>
         /// <param name="token">Token数组</param>
-        private static void Factor(string[][] token)
+        private static void Factor(List<Token> token)
         {
-            if (token[index][1] == Keywords.LKUOHAO)//字符为（
+            if (token[index].Code.ToString() == Keywords.LKUOHAO)//字符为（
             {
                 Next();
                 AritExp(token);//执行算术表达式
                 Next();
-                if (token[index][1] == Keywords.RKUOHAO)//字符为)
+                if (token[index].Code.ToString() == Keywords.RKUOHAO)//字符为)
                 {
                     return;
                 }
@@ -526,9 +482,9 @@ namespace CompilationTechnologyExperiment
         /// 算术量CalQua//〈算术量〉→〈标识符〉｜〈整数〉｜〈实数〉
         /// </summary>
         /// <param name="token">Token数组</param>
-        private static void CalQua(string[][] token)
+        private static void CalQua(List<Token> token)
         {
-            if (token[index][1] == Keywords.ID || token[index][1] == Keywords.整型 || token[index][1] == Keywords.实型)//标识符或整数或实数
+            if (token[index].Code.ToString() == Keywords.ID || token[index].Code.ToString() == Keywords.整型 || token[index].Code.ToString() == Keywords.实型)//标识符或整数或实数
             {
                 return;
             }
@@ -543,19 +499,19 @@ namespace CompilationTechnologyExperiment
         /// 结构句 StructSent//〈结构句〉→〈复合句〉｜〈if句〉｜〈WHILE句〉
         /// </summary>
         /// <param name="token">Token数组</param>
-        private static void StructSent(string[][] token)
+        private static void StructSent(List<Token> token)
         {
-            if (token[index][1] == Keywords.BEGIN)//begin
+            if (token[index].Code.ToString() == Keywords.BEGIN)//begin
             {
                 Next();
                 Compesent(token);//执行复合句
             }
-            else if (token[index][1] == Keywords.IF)//if
+            else if (token[index].Code.ToString() == Keywords.IF)//if
             {
                 Next();
                 IfSent(token);//执行if语句
             }
-            else if (token[index][1] == Keywords.WHILE)//while
+            else if (token[index].Code.ToString() == Keywords.WHILE)//while
             {
                 Next();
                 WhileSent(token);//执行while语句
@@ -566,16 +522,16 @@ namespace CompilationTechnologyExperiment
         /// if语句IfSent// 〈if句〉→if〈布尔表达式〉then〈执行句〉| if〈布尔表达式〉then〈执行句〉else〈执行句〉
         /// </summary>
         /// <param name="token">Token数组</param>
-        private static void IfSent(string[][] token)
+        private static void IfSent(List<Token> token)
         {
             BoolExp(token);//布尔表达式
             Next();
-            if (token[index][1] == Keywords.THEN)//then
+            if (token[index].Code.ToString() == Keywords.THEN)//then
             {
                 Next();
                 ExecSent(token);//执行句
                 Next();
-                if (token[index][1] == Keywords.ELSE)//else
+                if (token[index].Code.ToString() == Keywords.ELSE)//else
                 {
                     Next();
                     ExecSent(token);//执行句
@@ -597,11 +553,11 @@ namespace CompilationTechnologyExperiment
         /// while语句 WhileSent//〈while句〉→while〈布尔表达式〉do〈执行句〉
         /// </summary>
         /// <param name="token">Token数组</param>
-        private static void WhileSent(string[][] token)
+        private static void WhileSent(List<Token> token)
         {
             BoolExp(token);//布尔表达式
             Next();
-            if (token[index][1] == Keywords.DO)//do
+            if (token[index].Code.ToString() == Keywords.DO)//do
             {
                 Next();
                 ExecSent(token);//执行句
