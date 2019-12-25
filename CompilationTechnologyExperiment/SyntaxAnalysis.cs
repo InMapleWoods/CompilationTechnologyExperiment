@@ -9,6 +9,17 @@ namespace CompilationTechnologyExperiment
     /// </summary>
     public static class SyntaxAnalysis
     {
+        #region 变量声明
+        /// <summary>
+        /// 四元式列表
+        /// </summary>
+        private static List<QuaternaryFormula> formulas = new List<QuaternaryFormula>();
+
+        /// <summary>
+        /// 符号表
+        /// </summary>
+        private static List<Symbol> symbols = (List<Symbol>)Tools.GetJsonObject(Tools.GetFileContent("Symbol.txt"), "Symbol");
+
         /// <summary>
         /// 错误信息
         /// </summary>
@@ -18,6 +29,43 @@ namespace CompilationTechnologyExperiment
         /// Token长度
         /// </summary>
         private static int tokenLength = 0;
+
+        /// <summary>
+        /// 当前Token的索引
+        /// </summary>
+        private static int index = 0;
+
+        /// <summary>
+        /// 临时变量索引
+        /// </summary>
+        private static int temporaryVariablesIndex = 1;
+
+        /// <summary>
+        /// 临时变量
+        /// </summary>
+        private static string temporaryVariables = "";
+        #endregion
+
+        /// <summary>
+        /// 获取四元式文件字符串（JSON格式）
+        /// </summary>
+        /// <param name="formulas">四元式表</param>
+        /// <returns>符号表文件字符串</returns>
+        public static string GetQuaternaryFormulaFile(List<QuaternaryFormula> formulas)
+        {
+            try
+            {
+                if (formulas == null)
+                {
+                    return "";
+                }
+                return Newtonsoft.Json.JsonConvert.SerializeObject(formulas);
+            }
+            catch (ErrorException e)
+            {
+                throw;
+            }
+        }
 
         /// <summary>
         /// 获取错误信息
@@ -32,29 +80,40 @@ namespace CompilationTechnologyExperiment
         }
 
         /// <summary>
-        /// 当前Token的索引
+        /// 创建新的临时变量
         /// </summary>
-        private static int index = 0;
+        /// <returns></returns>
+        private static string NewTempVariable()
+        {
+            string temp = "T" + temporaryVariablesIndex.ToString();
+            temporaryVariablesIndex++;
+            Symbol symbol = new Symbol();
+            symbol.Name = temp;
+            symbols.Add(symbol);
+            return temp;
+        }
 
         /// <summary>
-        /// 语法分析
+        /// 回填函数，完成四元式转移目标的回填
         /// </summary>
-        /// <returns>分析结果</returns>
-        public static bool AnalysisResult()
+        /// <param name="addr">链首</param>
+        /// <param name="addr2">地址</param>
+        private static void BackPatch(int addr, int addr2)
         {
-            List<Token> token = (List<Token>)Tools.GetJsonObject(Tools.GetFileContent("Token.txt"), "Token");//token[0]="real" token[1]=42 token[2]=attr
-            tokenLength = token.Count;
-            try
-            {
-                Proghead(token);
-                Console.WriteLine("语法分析通过");
-                return true;
-            }
-            catch (ErrorException e)
-            {
-                Console.WriteLine("语法分析不通过，请处理");
-                return false;
-            }
+            formulas[addr].result = addr2.ToString();//把链首addr所链接的每个四元式的第四分量都改写为地址addr2
+        }
+
+        /// <summary>
+        /// 产生四元式
+        /// </summary>
+        /// <param name="op">操作符</param>
+        /// <param name="arg1">操作数1</param>
+        /// <param name="arg2">操作数2</param>
+        /// <param name="result">结果</param>
+        private static void Emit(string op, string arg1, string arg2, string result)
+        {
+            QuaternaryFormula formula = new QuaternaryFormula(op, arg1, arg2, result);
+            formulas.Add(formula);//将新生成的四元式表项formula添加到四元式列表formulas中
         }
 
         /// <summary>
@@ -80,6 +139,29 @@ namespace CompilationTechnologyExperiment
         }
 
         /// <summary>
+        /// 语法分析
+        /// </summary>
+        /// <returns>分析结果</returns>
+        public static bool AnalysisResult()
+        {
+            List<Token> token = (List<Token>)Tools.GetJsonObject(Tools.GetFileContent("Token.txt"), "Token");//token[0]="real" token[1]=42 token[2]=attr
+            tokenLength = token.Count;
+            try
+            {
+                Proghead(token);
+                Console.WriteLine("语法分析通过");
+                System.IO.File.WriteAllText("Formula.txt", SyntaxAnalysis.GetQuaternaryFormulaFile(formulas));
+                Console.WriteLine("四元式文件已生成");
+                return true;
+            }
+            catch (ErrorException e)
+            {
+                Console.WriteLine("语法分析不通过，请处理");
+                return false;
+            }
+        }
+
+        /// <summary>
         /// 分析程序头
         /// </summary>
         /// <param name="token">Token数组</param>
@@ -90,7 +172,7 @@ namespace CompilationTechnologyExperiment
                 Next();
                 if (token[index].Code.ToString() == Keywords.ID)//是标识符
                 {
-
+                    Emit("program", token[index].Name, "_", "_");
                     Next();
                     ProBody(token);//执行程序体
                 }
@@ -167,8 +249,7 @@ namespace CompilationTechnologyExperiment
                     else
                     {
                         error += "[\"变量定义缺少类型或类型定义错误\",\"" + index + "\"],";
-                        throw new ErrorException("变量定义缺少类型或类型定义错误", index.ToString()); ;
-                        return;
+                        throw new ErrorException("变量定义缺少类型或类型定义错误", index.ToString());
                     }
                 }
                 else
@@ -199,7 +280,8 @@ namespace CompilationTechnologyExperiment
                     return IsIdlist(token);//下一个字符若为逗号，则继续循环执行判断是否为标识符表
                 }
                 else
-                {//指向前一个字符，为标识符，返回true
+                {
+                    //指向前一个字符，为标识符，返回true
                     Before();
                     return true;
                 }
@@ -219,7 +301,7 @@ namespace CompilationTechnologyExperiment
             SentList(token);//执行语句表
             if (token[index].Code.ToString() == Keywords.SEM && token[index + 1].Code.ToString() == Keywords.END)//end
             {
-                return;
+                Emit("sys", "_", "_", "_");//生成四元式
             }
             else
             {
@@ -235,7 +317,8 @@ namespace CompilationTechnologyExperiment
         /// <param name="token">Token数组</param>
         private static void SentList(List<Token> token)
         {
-            ExecSent(token);//执行句
+            S s = new S();//新建一个产生式符号
+            ExecSent(token, ref s);//执行句
             Next();
             if (token[index].Code.ToString() == Keywords.SEM)//若为分号，继续循环执行语句表
             {
@@ -252,7 +335,8 @@ namespace CompilationTechnologyExperiment
         /// 执行句ExecSent//〈执行句〉→〈简单句〉｜〈结构句〉//〈简单句〉→〈赋值句〉
         /// </summary>
         /// <param name="token">Token数组</param>
-        private static void ExecSent(List<Token> token)
+        /// <param name="s">产生式</param>
+        private static void ExecSent(List<Token> token, ref S s)
         {
             if (token[index].Code.ToString() == Keywords.ID)//标识符如果是标识符，为简单句
             {
@@ -261,7 +345,7 @@ namespace CompilationTechnologyExperiment
             }
             else if (token[index].Code.ToString() == Keywords.BEGIN || token[index].Code.ToString() == Keywords.IF || token[index].Code.ToString() == Keywords.WHILE)//begin，if，while的机内码
             {
-                StructSent(token);//结构句
+                StructSent(token, ref s);//结构句
             }
             else
             {
@@ -277,8 +361,10 @@ namespace CompilationTechnologyExperiment
         {
             if (token[index].Code.ToString() == Keywords.FUZHI)//:=
             {
+                string temp = token[index - 1].Name;//temp记录上一个token文件项的名字
                 Next();
                 Expression(token);//表达式
+                Emit(":=", temporaryVariables, "_", temp);//生成四元式，即temp：=temporaryVariables
             }
             else
             {
@@ -293,11 +379,11 @@ namespace CompilationTechnologyExperiment
         /// <param name="token">Token数组</param>
         private static void Expression(List<Token> token)
         {
-            List<Symbol> symbols = (List<Symbol>)Tools.GetJsonObject(Tools.GetFileContent("Symbol.txt"), "Symbol");
             int symbolIndex = token[index].Addr;
             if (token[index].Code.ToString() == Keywords.FALSE || token[index].Code.ToString() == Keywords.TRUE || (symbolIndex != -1 && symbols[symbolIndex].Type.ToString() == Keywords.布尔型))//false或true或单词为保留字且在符号表中的类型为bool型
             {
-                BoolExp(token);//布尔表达式
+                E e = new E();//新建一个表达式
+                BoolExp(token, ref e);//布尔表达式
             }
             else
             {
@@ -309,36 +395,66 @@ namespace CompilationTechnologyExperiment
         /// 布尔表达式BoolExp//〈布尔表达式〉→〈布尔表达式〉or〈布尔项〉｜〈布尔项〉
         /// </summary>
         /// <param name="token">Token数组</param>
-        private static void BoolExp(List<Token> token)
+        private static void BoolExp(List<Token> token, ref E e)
         {
-            BoolItem(token);//布尔项
-            Next();
-            if (token[index].Code.ToString() == Keywords.OR)//or
+            E e1 = new E();
+            BoolItem(token, ref e1);//布尔项
+            try
             {
                 Next();
-                BoolExp(token);
+                if (token[index].Code.ToString() == Keywords.OR)//or
+                {
+                    int m = formulas.Count;//m记录四元式表项的数量值，即地址M.quad
+                    E e2 = new E();
+                    Next();
+                    BoolExp(token, ref e2);//执行布尔表达式
+                    e.True.Concat(e1.True);//Concat连接两个序列e1.True和e2.True,即e.True={e1.True,e2.True}
+                    e.True.Concat(e2.True);
+                    e.False = e2.False;//即e.False={e2.False}
+                    foreach (int k in e.False)//foreach是一个迭代器，从int型数组k中循环读取数据，并将每次循环到的值赋值给e.False
+                    {
+                        BackPatch(k, m);//执行回填函数,把链首k所链接的每个四元式的第四分量都改写为地址m;即k=e1.False,m=M.q
+                    }
+                }
+                else
+                {
+                    e = e1;
+                    Before();
+                }
             }
-            else
+            catch (ErrorException ex)
             {
-                Before();
+                e = e1;
+                throw ex;
             }
         }
 
         /// <summary>
-        /// 布尔项BoolItem//〈布尔项〉→〈布尔项〉and〈布尔因子〉｜〈布尔因子〉
+        /// 〈布尔项〉→〈布尔项〉and〈布尔因子〉｜〈布尔因子〉
         /// </summary>
         /// <param name="token">Token数组</param>
-        private static void BoolItem(List<Token> token)
+        private static void BoolItem(List<Token> token, ref E e)
         {
-            BoolFactor(token);//布尔因子
+            E e1 = new E();
+            BoolFactor(token, ref e1);//布尔因子
             Next();
-            if (token[index].Code.ToString() == Keywords.END)//and
+            if (token[index].Code.ToString() == Keywords.AND)//and
             {
                 Next();
-                BoolItem(token);//布尔项
+                int m = formulas.Count;
+                E e2 = new E();
+                BoolItem(token, ref e2);//布尔项
+                e.True = e2.True; //即e.True=e2.True
+                e.False.Concat(e1.False);//即e.False={e1.False,e2.False}
+                e.False.Concat(e2.False);
+                foreach (int k in e.True)
+                {
+                    BackPatch(k, m);//执行回填函数
+                }
             }
             else
             {
+                e = e1;
                 Before();
             }
 
@@ -348,16 +464,21 @@ namespace CompilationTechnologyExperiment
         /// 布尔因子BoolFactor//〈布尔因子〉→ not〈布尔因子〉｜〈布尔量〉
         /// </summary>
         /// <param name="token">Token数组</param>
-        private static void BoolFactor(List<Token> token)
+        private static void BoolFactor(List<Token> token, ref E e)
         {
             if (token[index].Code.ToString() == Keywords.NOT)//not
             {
                 Next();
-                BoolFactor(token);//布尔因子
+                E e1 = new E();
+                BoolFactor(token, ref e1);//布尔因子
+                e.True = e1.False;//即e.True=e1.True;e.False=e1.False
+                e.False = e1.True;
             }
             else
             {
-                BoolValue(token);//布尔量
+                E e1 = new E();
+                BoolValue(token, ref e1);//布尔量
+                e = e1;
             }
         }
 
@@ -365,11 +486,13 @@ namespace CompilationTechnologyExperiment
         /// 布尔量BoolValue//〈布尔量〉→〈布尔常数〉｜〈标识符〉｜（〈布尔表达式〉）｜〈关系表达式〉
         /// </summary>
         /// <param name="token">Token数组</param>
-        private static void BoolValue(List<Token> token)
+        private static void BoolValue(List<Token> token, ref E e)
         {
             if (token[index].Code.ToString() == Keywords.TRUE || token[index].Code.ToString() == Keywords.FALSE)//true或false
             {
-                return;
+                e.True.Add(formulas.Count);
+                e.False.Add(formulas.Count + 1);
+                temporaryVariables = token[index].Name;//tt记录名字
             }
             else if (token[index].Code.ToString() == Keywords.ID)//标识符（关系表达式）
             {
@@ -379,6 +502,10 @@ namespace CompilationTechnologyExperiment
                     Next();
                     if (token[index].Code.ToString() == Keywords.ID)//标识符
                     {
+                        e.True.Add(formulas.Count);
+                        e.False.Add(formulas.Count + 1);
+                        Emit("j" + token[index - 1].Name, token[index - 2].Name, token[index].Name, "0");//生成四元式，即a<b的四元式为(j<,a,b,0)
+                        Emit("j", "_", "_", "0");
                     }
                     else
                     {
@@ -389,11 +516,19 @@ namespace CompilationTechnologyExperiment
                 else
                 {
                     Before();
+                    e.True.Add(formulas.Count);
+                    e.False.Add(formulas.Count + 1);
+                    Emit("jnz", token[index].Name, "_", "0");//生成四元式,即E—>a的四元式为(jnz,a,_,0)
+                    Emit("j", "_", "_", "0");
+                    Next();
                 }
             }
             else if (token[index].Code.ToString() == Keywords.LKUOHAO)//字符为（，即布尔表达式
             {
-                BoolExp(token);//执行布尔表达式
+                E e1 = new E();//定义E—>(E1)
+                BoolExp(token, ref e1);//执行布尔表达式
+                e.True = e1.True;
+                e.False = e1.False;
                 if (token[index].Code.ToString() == Keywords.RKUOHAO)//字符为）
                 {
                     return;
@@ -418,19 +553,24 @@ namespace CompilationTechnologyExperiment
         private static void AritExp(List<Token> token)
         {
             Item(token);//执行项
-
             Next();
             if (token[index].Code.ToString() == Keywords.ADD || token[index].Code.ToString() == Keywords.SUB)//符号为+或-
             {
+                string[] temp = { token[index - 1].Name, token[index].Name };//temp记录运算符和它前面的变量名字
+                if (token[index - 1].Code == 22)//符号为）
+                {
+                    temp[0] = temporaryVariables;
+                }
                 Next();
                 AritExp(token);//执行算术表达式
+                Emit(temp[1], temp[0], temporaryVariables, NewTempVariable());//生成四元式，即x:=y+z的四元式为(+,y,z,T1)
+                temporaryVariables = "T" + (temporaryVariablesIndex - 1).ToString();
             }
             else
             {
                 Before();
                 return;
             }
-
         }
 
         /// <summary>
@@ -443,6 +583,16 @@ namespace CompilationTechnologyExperiment
             Next();
             if (token[index].Code.ToString() == Keywords.MUL || token[index].Code.ToString() == Keywords.DIV)//符号为*或/
             {
+                string[] temp = { token[index - 1].Name, token[index].Name };//temp记录运算符和它前面的变量名字
+                if (token[index - 1].Code == 22)//符号为）
+                {
+                    temp[0] = temporaryVariables;
+                }
+                Next();
+                Item(token);//执行算术表达式
+                Emit(temp[1], temp[0], temporaryVariables, NewTempVariable());//生成四元式，即x:=y*z的四元式为(*,y,z,T1)
+                temporaryVariables = "T" + (temporaryVariablesIndex - 1).ToString();
+
                 Next();
                 Item(token);//执行项
             }
@@ -488,7 +638,7 @@ namespace CompilationTechnologyExperiment
         {
             if (token[index].Code.ToString() == Keywords.ID || token[index].Code.ToString() == Keywords.整型 || token[index].Code.ToString() == Keywords.实型)//标识符或整数或实数
             {
-                return;
+                temporaryVariables = token[index].Name;//记录变量名
             }
             else
             {
@@ -501,7 +651,7 @@ namespace CompilationTechnologyExperiment
         /// 结构句 StructSent//〈结构句〉→〈复合句〉｜〈if句〉｜〈WHILE句〉
         /// </summary>
         /// <param name="token">Token数组</param>
-        private static void StructSent(List<Token> token)
+        private static void StructSent(List<Token> token, ref S s)
         {
             if (token[index].Code.ToString() == Keywords.BEGIN)//begin
             {
@@ -511,12 +661,12 @@ namespace CompilationTechnologyExperiment
             else if (token[index].Code.ToString() == Keywords.IF)//if
             {
                 Next();
-                IfSent(token);//执行if语句
+                IfSent(token, ref s);//执行if语句
             }
             else if (token[index].Code.ToString() == Keywords.WHILE)//while
             {
                 Next();
-                WhileSent(token);//执行while语句
+                WhileSent(token, ref s);//执行while语句
             }
         }
 
@@ -524,24 +674,48 @@ namespace CompilationTechnologyExperiment
         /// if语句IfSent// 〈if句〉→if〈布尔表达式〉then〈执行句〉| if〈布尔表达式〉then〈执行句〉else〈执行句〉
         /// </summary>
         /// <param name="token">Token数组</param>
-        private static void IfSent(List<Token> token)
+        private static void IfSent(List<Token> token, ref S s)
         {
-            BoolExp(token);//布尔表达式
+            E e = new E();
+            BoolExp(token, ref e);//布尔表达式
             Next();
             if (token[index].Code.ToString() == Keywords.THEN)//then
             {
+                int m1 = formulas.Count;
+                S s1 = new S();
                 Next();
-                ExecSent(token);//执行句
+                ExecSent(token, ref s1);//执行句
                 Next();
                 if (token[index].Code.ToString() == Keywords.ELSE)//else
                 {
+                    S n = new S();//若N—>ε,n.next=fps.Count,并生成四元式(j,_,_,0)
+                    n.next.Add(formulas.Count);
+                    Emit("j", "_", "_", "0");
+                    S s2 = new S();
+                    int m2 = formulas.Count;
                     Next();
-                    ExecSent(token);//执行句
+                    ExecSent(token, ref s2);//执行句
+                    s.next = s1.next;
+                    s.next.Concat(n.next);
+                    s.next.Concat(s2.next);
+                    foreach (int k in e.True)
+                    {
+                        BackPatch(k, m1);//执行回填函数
+                    }
+                    foreach (int k in e.False)
+                    {
+                        BackPatch(k, m2);
+                    }
                 }
                 else
                 {
+                    s.next = e.False;
+                    s.next.Concat(s1.next);
+                    foreach (int k in e.True)
+                    {
+                        BackPatch(k, m1);
+                    }
                     Before();
-                    return;
                 }
             }
             else
@@ -555,14 +729,28 @@ namespace CompilationTechnologyExperiment
         /// while语句 WhileSent//〈while句〉→while〈布尔表达式〉do〈执行句〉
         /// </summary>
         /// <param name="token">Token数组</param>
-        private static void WhileSent(List<Token> token)
+        private static void WhileSent(List<Token> token, ref S s)
         {
-            BoolExp(token);//布尔表达式
+            int m1 = formulas.Count;
+            E e = new E();
+            BoolExp(token, ref e);//布尔表达式
             Next();
-            if (token[index].Code.ToString() == Keywords.DO)//do
+            if (token[index].Code.ToString() == Keywords.DO)//do即控制语句产生式为S—>while M1E do M2S1,则s.next=e.False,生成四元式(j,_,_,m1.q),并回填e.True和s1.next
             {
+                int m2 = formulas.Count;
+                S s1 = new S();
                 Next();
-                ExecSent(token);//执行句
+                ExecSent(token, ref s1);//执行句
+                s.next = e.False;
+                Emit("j", "_", "_", m1.ToString());//生成四元式
+                foreach (int k in e.True)
+                {
+                    BackPatch(k, m2);
+                }
+                foreach (int k in s1.next)
+                {
+                    BackPatch(k, m1);
+                }
             }
             else
             {

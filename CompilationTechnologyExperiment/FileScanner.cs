@@ -10,7 +10,7 @@ namespace CompilationTechnologyExperiment
     public static partial class FileScanner
     {
         public static List<Token> tokens { get; set; } = new List<Token>();
-        public static List<Symbol> symbols{ get; set; } = new List<Symbol>();
+        public static List<Symbol> symbols { get; set; } = new List<Symbol>();
         private static string error = "";
         private static int count = 0;
         /// <summary>

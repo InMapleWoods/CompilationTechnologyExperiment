@@ -282,5 +282,72 @@ namespace CompilationTechnologyExperiment
         /// 结果
         /// </summary>
         public string result;
+
+        /// <summary>
+        /// 无参构造函数
+        /// </summary>
+        public QuaternaryFormula()
+        {
+
+        }
+
+        /// <summary>
+        /// 带参构造函数
+        /// </summary>
+        /// <param name="op">操作符</param>
+        /// <param name="arg1">操作数1</param>
+        /// <param name="arg2">操作数2</param>
+        /// <param name="result">结果</param>
+        public QuaternaryFormula(string op, string arg1, string arg2, string result)
+        {
+            this.op = op;
+            this.arg1 = arg1;
+            this.arg2 = arg2;
+            this.result = result;
+        }
+    }
+
+    /// <summary>
+    /// 表达式E
+    /// </summary>
+    public class E
+    {
+        /// <summary>
+        /// 表达式为假时，所指向的链表
+        /// </summary>
+        public List<int> False { set; get; }
+
+        /// <summary>
+        /// 表达式为真时，所指向的链表
+        /// </summary>
+        public List<int> True { set; get; }
+
+        /// <summary>
+        /// 无参构造函数
+        /// </summary>
+        public E()
+        {
+            this.False = new List<int>();
+            this.True = new List<int>();
+        }
+    }
+
+    /// <summary>
+    /// 产生式S
+    /// </summary>
+    public class S
+    {
+        /// <summary>
+        /// 下一个链表
+        /// </summary>
+        public List<int> next { set; get; }
+
+        /// <summary>
+        /// 无参构造函数
+        /// </summary>
+        public S()
+        {
+            this.next = new List<int>();
+        }
     }
 }

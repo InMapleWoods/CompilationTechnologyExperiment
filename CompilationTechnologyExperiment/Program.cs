@@ -24,7 +24,7 @@ namespace CompilationTechnologyExperiment
                     Console.WriteLine(SyntaxAnalysis.GetErrorMessage());
                 }
             }
-            catch(Exception e) { Console.WriteLine(e); }
+            catch (Exception e) { Console.WriteLine(e); }
             Console.Read();
             Console.Read();
         }
