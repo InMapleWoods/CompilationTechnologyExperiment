@@ -11,7 +11,7 @@ namespace CompilationTechnologyExperiment
         /// <summary>
         /// 错误信息
         /// </summary>
-        private static string error ="[";
+        private static string error = "[";
 
         /// <summary>
         /// Token长度
@@ -90,12 +90,12 @@ namespace CompilationTechnologyExperiment
             try
             {
                 Proghead(token);
-                Console.WriteLine("YES");
+                Console.WriteLine("语法分析通过");
                 return true;
             }
-            catch(ErrorException e)
+            catch (ErrorException e)
             {
-                Console.WriteLine("No");
+                Console.WriteLine("语法分析不通过，请处理");
                 return false;
             }
         }
@@ -105,7 +105,7 @@ namespace CompilationTechnologyExperiment
         /// </summary>
         private static void Next()
         {
-            if (index <tokenLength - 1)
+            if (index < tokenLength - 1)
             {
                 index++;
             }
@@ -336,7 +336,8 @@ namespace CompilationTechnologyExperiment
         /// <param name="token">Token数组</param>
         private static void Expression(string[][] token)
         {
-            if (token[index][1] == Keywords.FALSE || token[index][1] == Keywords.TRUE || (token[index][0] != "-1" && GetSymbol()[int.Parse(token[index][2])][0] == "布尔型"))//false或true或单词为保留字且在符号表中的类型为bool型
+            int symbolIndex = int.Parse(token[index][2]);
+            if (token[index][1] == Keywords.FALSE || token[index][1] == Keywords.TRUE || (symbolIndex != -1 && GetSymbol()[symbolIndex][0] == "布尔型"))//false或true或单词为保留字且在符号表中的类型为bool型
             {
                 BoolExp(token);//布尔表达式
             }
