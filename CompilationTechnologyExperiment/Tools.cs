@@ -58,7 +58,7 @@ namespace CompilationTechnologyExperiment
             if (index >= input.Length)
                 return false;
             List<char> op = "+-*%/=><".ToList();
-            List<char> sp = "{}[](),;:_ ".ToList();
+            List<char> sp = "{}[](),;:_. ".ToList();
             if (op.Contains(input[index]) || sp.Contains(input[index]))
             {
                 return true;
@@ -164,15 +164,24 @@ namespace CompilationTechnologyExperiment
         /// 字符串获取数组
         /// </summary>
         /// <param name="input">字符串</param>
+        /// <param name="type">类型</param>
         /// <returns>数组内容</returns>
-        public static object GetJsonObject(string input)
+        public static IEnumerable GetJsonObject(string input, string type)
         {
             if (string.IsNullOrEmpty(input))
             {
                 throw new ErrorException(ErrorMessageResource.FileEmptyError);
             }
-            dynamic JSONObject = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(input);
-            return JSONObject;
+            if (type == "Token")
+            {
+                return Newtonsoft.Json.JsonConvert.DeserializeObject<List<Token>>(input);
+
+            }
+            else if (type == "Symbol")
+            {
+                return Newtonsoft.Json.JsonConvert.DeserializeObject<List<Symbol>>(input);
+            }
+            return null;
         }
         /// <summary>
         /// 获取文件内容
@@ -243,14 +252,35 @@ namespace CompilationTechnologyExperiment
         /// 名字
         /// </summary>
         public string Name { set; get; }
-        public List<string[]> Wait { set; get; }
         /// <summary>
         /// 初始化
         /// </summary>
         public Symbol()
         {
-            Wait = new List<string[]>();
-            Wait.Add(new string[2] { "0", "N" });
+
         }
+    }
+
+    /// <summary>
+    /// 四元式
+    /// </summary>
+    public class QuaternaryFormula
+    {
+        /// <summary>
+        /// 操作符
+        /// </summary>
+        public string op;
+        /// <summary>
+        /// 操作数1
+        /// </summary>
+        public string arg1;
+        /// <summary>
+        /// 操作数2
+        /// </summary>
+        public string arg2;
+        /// <summary>
+        /// 结果
+        /// </summary>
+        public string result;
     }
 }

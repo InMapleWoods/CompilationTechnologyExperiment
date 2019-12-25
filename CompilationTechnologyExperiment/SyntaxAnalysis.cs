@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CompilationTechnologyExperiment
 {
@@ -41,7 +42,7 @@ namespace CompilationTechnologyExperiment
         /// <returns>分析结果</returns>
         public static bool AnalysisResult()
         {
-            List<Token> token = FileScanner.tokens;//token[0]="real" token[1]=42 token[2]=attr
+            List<Token> token = (List<Token>)Tools.GetJsonObject(Tools.GetFileContent("Token.txt"), "Token");//token[0]="real" token[1]=42 token[2]=attr
             tokenLength = token.Count;
             try
             {
@@ -292,8 +293,9 @@ namespace CompilationTechnologyExperiment
         /// <param name="token">Token数组</param>
         private static void Expression(List<Token> token)
         {
+            List<Symbol> symbols = (List<Symbol>)Tools.GetJsonObject(Tools.GetFileContent("Symbol.txt"), "Symbol");
             int symbolIndex = token[index].Addr;
-            if (token[index].Code.ToString() == Keywords.FALSE || token[index].Code.ToString() == Keywords.TRUE || (symbolIndex != -1 && FileScanner.symbols[symbolIndex].Type.ToString() == Keywords.布尔型))//false或true或单词为保留字且在符号表中的类型为bool型
+            if (token[index].Code.ToString() == Keywords.FALSE || token[index].Code.ToString() == Keywords.TRUE || (symbolIndex != -1 && symbols[symbolIndex].Type.ToString() == Keywords.布尔型))//false或true或单词为保留字且在符号表中的类型为bool型
             {
                 BoolExp(token);//布尔表达式
             }

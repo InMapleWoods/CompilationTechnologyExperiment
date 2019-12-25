@@ -58,6 +58,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ErrorMessageResource.resx</DependentUpon>
     </Compile>
+    <Compile Include="GenerateAssemblyCode.cs" />
     <Compile Include="IdentifyResource.cs" />
     <Compile Include="Keywords.Designer.cs">
       <AutoGen>True</AutoGen>

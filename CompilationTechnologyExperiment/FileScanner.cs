@@ -448,16 +448,17 @@ namespace CompilationTechnologyExperiment
             {
                 for (int i = 0; i < tokens.Count; i++)
                 {
-                    if (tokens[i].Code == 9 || tokens[i].Code == 3 || tokens[i].Code == 13)//类型为integer或bool或real
+                    if (tokens[i].Code.ToString() == CompilationTechnologyExperiment.Keywords.INTEGER || tokens[i].Code.ToString() == CompilationTechnologyExperiment.Keywords.BOOL || tokens[i].Code.ToString() == CompilationTechnologyExperiment.Keywords.REAL)//类型为integer或bool或real
                     {
                         int j = i;
                         j = j - 2;
                         symbols[tokens[j].Addr].Type = tokens[i].Code;//类型定义正确，在符号表中记录该标识符的类型
                         j--;
-                        while (tokens[j].Code == 28)// 若标识符后面有逗号，表示同时定义了几个相同类型的变量，把它们都添加到符号表中
+                        while (tokens[j].Code.ToString() == CompilationTechnologyExperiment.Keywords.DOUHAO)// 若标识符后面有逗号，表示同时定义了几个相同类型的变量，把它们都添加到符号表中
                         {
                             j--;
                             symbols[tokens[j].Addr].Type = tokens[i].Code;
+                            j--;
                         }
                     }
                 }
