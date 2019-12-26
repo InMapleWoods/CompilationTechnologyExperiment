@@ -1,0 +1,9 @@
+program main
+var ww,a,b,c:integer;
+k,w,d,e: bool;
+f,ll,o,o2: real;
+begin
+a:=2+4;
+b:=a+2;
+while (a<b) do if (c>e) then c:=0 else d:=false;
+end

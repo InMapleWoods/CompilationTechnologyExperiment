@@ -376,7 +376,12 @@ namespace CompilationTechnologyExperiment
                 {
                     return "";
                 }
-                return Newtonsoft.Json.JsonConvert.SerializeObject(symbols);
+                string str = "\t序号\tNumber:\tName:\tType:\tValue:\tWait\r\n";
+                for (int i = 0; i < symbols.Count; i++)
+                {
+                    str += "\t(" + i + ")\t" + symbols[i].Number + "\t" + symbols[i].Name + "\t" + symbols[i].Type + "\t" + symbols[i].Value + "\t" + Newtonsoft.Json.JsonConvert.SerializeObject(symbols[i].Wait) + "\r\n";
+                }
+                return str;
             }
             catch (ErrorException e)
             {
@@ -396,7 +401,12 @@ namespace CompilationTechnologyExperiment
                 {
                     return "";
                 }
-                return Newtonsoft.Json.JsonConvert.SerializeObject(tokens);
+                string str = "\t序号\tLabel:\tName:\tCode:\tAddr:\r\n";
+                for (int i = 0; i < tokens.Count; i++)
+                {
+                    str += "\t(" + i + ")\t" + tokens[i].Label + "\t" + tokens[i].Name + "\t" + tokens[i].Code + "\t" + tokens[i].Addr + "\r\n";
+                }
+                return str;
             }
             catch (ErrorException e)
             {
@@ -424,11 +434,38 @@ namespace CompilationTechnologyExperiment
                     token.Name = i.Key;
                     token.Code = i.Value;
                     token.Addr = symbols.Count;
-                    Symbol symbol = new Symbol();
-                    symbol.Number = token.Addr;
-                    symbol.Name = i.Key;
-                    symbol.Type = i.Value;
-                    symbols.Add(symbol);
+                    if (i.Value.ToString() == CompilationTechnologyExperiment.Keywords.ID)
+                    {
+                        Symbol symbol = new Symbol();
+                        symbol.Number = token.Addr;
+                        symbol.Name = i.Key;
+                        symbol.Type = i.Value;
+                        symbols.Add(symbol);
+                    }
+                    else if (i.Value.ToString() == CompilationTechnologyExperiment.Keywords.整型)
+                    {
+                        Symbol symbol = new Symbol();
+                        symbol.Number = token.Addr;
+                        symbol.Name = i.Key;
+                        symbol.Type = i.Value;
+                        symbols.Add(symbol);
+                    }
+                    else if (i.Value.ToString() == CompilationTechnologyExperiment.Keywords.实型)
+                    {
+                        Symbol symbol = new Symbol();
+                        symbol.Number = token.Addr;
+                        symbol.Name = i.Key;
+                        symbol.Type = i.Value;
+                        symbols.Add(symbol);
+                    }
+                    else if (i.Value.ToString() == CompilationTechnologyExperiment.Keywords.TRUE|| i.Value.ToString() == CompilationTechnologyExperiment.Keywords.FALSE)
+                    {
+                        Symbol symbol = new Symbol();
+                        symbol.Number = token.Addr;
+                        symbol.Name = i.Key;
+                        symbol.Type = i.Value;
+                        symbols.Add(symbol);
+                    }
                     tokens.Add(token);
                 }
             }

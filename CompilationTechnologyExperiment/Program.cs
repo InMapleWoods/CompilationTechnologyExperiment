@@ -18,11 +18,17 @@ namespace CompilationTechnologyExperiment
                 Console.WriteLine("Token文件和符号表文件已经生成在程序所在目录");
                 Console.WriteLine("按任意键进行语法分析");
                 Console.Read();
-                bool syntaxAnalysisResult = SyntaxAnalysis.AnalysisResult();
+                Console.Read();
+                bool syntaxAnalysisResult = SyntaxAnalysis.AnalysisResult(FileScanner.tokens, FileScanner.symbols);
                 if (!syntaxAnalysisResult)
                 {
                     Console.WriteLine(SyntaxAnalysis.GetErrorMessage());
                 }
+                Console.WriteLine("按任意键进行目标代码生成");
+                Console.Read();
+                Console.Read();
+                GenerateAssemblyCode.GenerateCode(SyntaxAnalysis.formulas, SyntaxAnalysis.symbols, SyntaxAnalysis.basicBlock);
+                Console.WriteLine("目标代码文件已经生成在程序所在目录");
             }
             catch (Exception e) { Console.WriteLine(e); }
             Console.Read();

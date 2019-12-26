@@ -181,6 +181,10 @@ namespace CompilationTechnologyExperiment
             {
                 return Newtonsoft.Json.JsonConvert.DeserializeObject<List<Symbol>>(input);
             }
+            else if (type == "Formula")
+            {
+                return Newtonsoft.Json.JsonConvert.DeserializeObject<List<QuaternaryFormula>>(input);
+            }
             return null;
         }
         /// <summary>
@@ -233,6 +237,13 @@ namespace CompilationTechnologyExperiment
         public Token()
         {
         }
+        public Token(int Label,string Name,int Code,int Addr)
+        {
+            this.Label = Label;
+            this.Name = Name;
+            this.Code = Code;
+            this.Addr = Addr;
+        }
     }
 
     /// <summary>
@@ -253,11 +264,36 @@ namespace CompilationTechnologyExperiment
         /// </summary>
         public string Name { set; get; }
         /// <summary>
+        /// 待用信息表
+        /// </summary>
+        public List<string[]> Wait { set; get; }= new List<string[]>();
+
+        /// <summary>
+        /// 寄存器值AVALUE
+        /// </summary>
+        public string Value { set; get; } 
+        /// <summary>
         /// 初始化
         /// </summary>
         public Symbol()
         {
-
+            Value = "";
+            Wait = new List<string[]>();
+            if (Wait.Count == 0)
+            {
+                Wait.Add(new string[2] { "0", "N" });
+            }
+        }
+        /// <summary>
+        /// 初始化
+        /// </summary>
+        public Symbol(int Number,int Type,string Name, List<string[]> Wait,string Value)
+        {
+            this.Number = Number;
+            this.Type = Type;
+            this.Name = Name;
+            this.Wait = Wait;
+            this.Value = Value;
         }
     }
 
@@ -282,6 +318,10 @@ namespace CompilationTechnologyExperiment
         /// 结果
         /// </summary>
         public string result;
+        /// <summary>
+        /// 基本块入口
+        /// </summary>
+        public bool enter { get; set; }
 
         /// <summary>
         /// 无参构造函数
@@ -304,6 +344,7 @@ namespace CompilationTechnologyExperiment
             this.arg1 = arg1;
             this.arg2 = arg2;
             this.result = result;
+            enter = false;
         }
     }
 
@@ -348,6 +389,41 @@ namespace CompilationTechnologyExperiment
         public S()
         {
             this.next = new List<int>();
+        }
+    }
+
+    /// <summary>
+    /// 汇编代码
+    /// </summary>
+    public class Assembly
+    {
+        /// <summary>
+        /// 操作符
+        /// </summary>
+        public string Op { set; get; }
+        /// <summary>
+        /// 操作数1
+        /// </summary>
+        public string PL { set; get; }
+        /// <summary>
+        /// 操作数2
+        /// </summary>
+        public string PR { set; get; }
+        /// <summary>
+        /// 序号
+        /// </summary>
+        public string Num { set; get; }
+        /// <summary>
+        /// 三元式
+        /// </summary>
+        /// <param name="op">操作符</param>
+        /// <param name="pl">操作数1</param>
+        /// <param name="pr">操作数2</param>
+        public Assembly(string op, string pl, string pr) 
+        {
+            Op = op;
+            PL = pl;
+            PR = pr;
         }
     }
 }

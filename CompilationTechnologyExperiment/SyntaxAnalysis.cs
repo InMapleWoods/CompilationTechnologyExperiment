@@ -13,12 +13,17 @@ namespace CompilationTechnologyExperiment
         /// <summary>
         /// 四元式列表
         /// </summary>
-        private static List<QuaternaryFormula> formulas = new List<QuaternaryFormula>();
+        public static List<QuaternaryFormula> formulas = new List<QuaternaryFormula>();
+
+        /// <summary>
+        /// 基本块始终位置
+        /// </summary>
+        public static List<int[]> basicBlock = new List<int[]>();
 
         /// <summary>
         /// 符号表
         /// </summary>
-        private static List<Symbol> symbols = (List<Symbol>)Tools.GetJsonObject(Tools.GetFileContent("Symbol.txt"), "Symbol");
+        public static List<Symbol> symbols = new List<Symbol>();
 
         /// <summary>
         /// 错误信息
@@ -50,7 +55,7 @@ namespace CompilationTechnologyExperiment
         /// 获取四元式文件字符串（JSON格式）
         /// </summary>
         /// <param name="formulas">四元式表</param>
-        /// <returns>符号表文件字符串</returns>
+        /// <returns>四元式表文件字符串</returns>
         public static string GetQuaternaryFormulaFile(List<QuaternaryFormula> formulas)
         {
             try
@@ -59,7 +64,63 @@ namespace CompilationTechnologyExperiment
                 {
                     return "";
                 }
-                return Newtonsoft.Json.JsonConvert.SerializeObject(formulas);
+                #region 确定基本块入口
+                List<string> jumpOp = new List<string> { "jnz", "j", "j=", "j<", "j>", "j<>", "j<=", "j>=" };//==或>或<或<>或<=或>=
+                for (int i = 0; i < formulas.Count; i++)
+                {
+                    if (formulas[i].op == "sys")
+                    {
+                        break;
+                    }
+                    if (i == 0)
+                    {
+                        formulas[i].enter = true;
+                    }
+                    if (jumpOp.Contains(formulas[i].op))
+                    {
+                        formulas[int.Parse(formulas[i].result)].enter = true;
+                        if (formulas[i].op != "j")
+                        {
+                            if (i + 1 < formulas.Count)
+                                formulas[i + 1].enter = true;
+                        }
+                    }
+                }
+                #endregion
+                #region 确定基本块
+                int start = 0;
+                for (int i = 1; i < formulas.Count; i++)
+                {
+                    if (formulas[i].enter)
+                    {
+                        int[] temp = new int[] { start, (i - 1) };
+                        basicBlock.Add(temp);
+                        start = i;
+                    }
+                    else if (formulas[i].op == "sys" || jumpOp.Contains(formulas[i].op))
+                    {
+                        int[] temp = new int[] { start, i };
+                        basicBlock.Add(temp);
+                        i++;
+                        start = i;
+                    }
+                }
+                #endregion
+                #region 输出四元式
+                string str = "\t序号\tOP:\tArg1:\tArg2:\tResult:\tEnter:\r\n";
+                for (int i = 0; i < formulas.Count; i++)
+                {
+                    str += "\t(" + i + ")\t" + formulas[i].op + "\t" + formulas[i].arg1 + "\t" + formulas[i].arg2 + "\t" + formulas[i].result + "\t" + formulas[i].enter + "\r\n";
+                }
+                #endregion
+                #region 输出基本块
+                str += "\r\n基本块：";
+                foreach (var i in basicBlock)
+                {
+                    str += "(" + i[0] + "," + i[1] + ")，";
+                }
+                #endregion
+                return str;
             }
             catch (ErrorException e)
             {
@@ -142,9 +203,10 @@ namespace CompilationTechnologyExperiment
         /// 语法分析
         /// </summary>
         /// <returns>分析结果</returns>
-        public static bool AnalysisResult()
+        public static bool AnalysisResult(List<Token> token, List<Symbol> symbols)
         {
-            List<Token> token = (List<Token>)Tools.GetJsonObject(Tools.GetFileContent("Token.txt"), "Token");//token[0]="real" token[1]=42 token[2]=attr
+            SyntaxAnalysis.symbols = symbols;
+            //token[0]="real" token[1]=42 token[2]=attr
             tokenLength = token.Count;
             try
             {
@@ -152,6 +214,7 @@ namespace CompilationTechnologyExperiment
                 Console.WriteLine("语法分析通过");
                 System.IO.File.WriteAllText("Formula.txt", SyntaxAnalysis.GetQuaternaryFormulaFile(formulas));
                 Console.WriteLine("四元式文件已生成");
+                System.IO.File.WriteAllText("Symbol.txt", FileScanner.GetSymbolFile(SyntaxAnalysis.symbols));
                 return true;
             }
             catch (ErrorException e)
@@ -526,9 +589,11 @@ namespace CompilationTechnologyExperiment
             else if (token[index].Code.ToString() == Keywords.LKUOHAO)//字符为（，即布尔表达式
             {
                 E e1 = new E();//定义E—>(E1)
+                Next();
                 BoolExp(token, ref e1);//执行布尔表达式
                 e.True = e1.True;
                 e.False = e1.False;
+                Next();
                 if (token[index].Code.ToString() == Keywords.RKUOHAO)//字符为）
                 {
                     return;
