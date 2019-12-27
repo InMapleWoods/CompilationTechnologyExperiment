@@ -171,22 +171,28 @@ namespace UI_CompilationTechnology
                 var values = fileScanner.GetContentKeyValues(fileScanner.ProcessContent(sourceCode));
                 fileScanner.GetTokens(values);
                 fileScanner.GetSymbols();
-                string scannerResult = fileScanner.GetTokenFile(fileScanner.tokens);
+                string scannerTokensResult = fileScanner.GetTokenFile(fileScanner.tokens);
+                string scannerSymbolsResult = fileScanner.GetSymbolFile(fileScanner.symbols);
                 if (fileScanner.error.Length == 0)
                 {
                     if (!isshowFileAnalysisForm)
                     {
-                        fileAnalysisForm = new FileAnalysisForm(scannerResult);
+                        fileAnalysisForm = new FileAnalysisForm(scannerTokensResult, scannerSymbolsResult);
                         fileAnalysisForm.MdiParent = this;
+                        fileAnalysisForm.fileAnalysis.MdiParent = this;
                         fileAnalysisForm.Show();
+                        fileAnalysisForm.fileAnalysis.Show();
                     }
                     else
                     {
-                        fileAnalysisForm.SetCode(scannerResult);
+                        fileAnalysisForm.SetCode(scannerTokensResult);
+                        fileAnalysisForm.fileAnalysis.SetCode(scannerSymbolsResult);
                     }
                 }
                 else
                 {
+                    fileAnalysisForm.fileAnalysis.Close();
+                    fileAnalysisForm.Close();
                     fileScanner.error = fileScanner.error.Substring(0, fileScanner.error.Length - 1);
                     if (!string.IsNullOrEmpty(fileScanner.error))
                         fileScanner.error += "]";

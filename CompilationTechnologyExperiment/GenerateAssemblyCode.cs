@@ -101,6 +101,11 @@ namespace CompilationTechnologyExperiment
         /// </summary>
         public bool GenerateCode(List<QuaternaryFormula> formulas, List<Symbol> symbols, List<int[]> basicBlock)
         {
+            if (formulas.Count == 0 || symbols.Count == 0 || basicBlock.Count == 0)
+            {
+                error = "目标代码生成时缺少四元式表或符号表";
+                return false;
+            }
             try
             {
                 lineIndex = 0;

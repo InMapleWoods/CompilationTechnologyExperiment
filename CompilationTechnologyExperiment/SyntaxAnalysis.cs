@@ -209,6 +209,11 @@ namespace CompilationTechnologyExperiment
             this.symbols = symbols;
             //token[0]="real" token[1]=42 token[2]=attr
             tokenLength = token.Count;
+            if(tokenLength==0||symbols.Count==0)
+            {
+                error += "[\"缺少语法分析所需要的Token表或符号表\",\"" + index + "\"],";
+                throw new ErrorException("缺少语法分析所需要的Token表或符号表");
+            }
             try
             {
                 Proghead(token);

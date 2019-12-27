@@ -5,9 +5,18 @@ namespace UI_CompilationTechnology
 {
     public partial class FileAnalysisForm : Form
     {
+        public FileAnalysisForm fileAnalysis;
         public FileAnalysisForm()
         {
             InitializeComponent();
+        }
+        public FileAnalysisForm(string code,string code2)
+        {
+            InitializeComponent();
+            sourceCodeTextBox.Text = code;
+            sourceCodeTextBox.Select(0, 0);
+            fileAnalysis = new FileAnalysisForm(code2);
+            fileAnalysis.SetColor();
         }
         public FileAnalysisForm(string code)
         {
@@ -26,6 +35,10 @@ namespace UI_CompilationTechnology
             MainForm.isshowFileAnalysisForm = true;
         }
 
+        public void SetColor()
+        {
+            sourceCodeTextBox.BackColor = System.Drawing.Color.FromArgb(186,190,228);
+        }
         public void SetCode(string code)
         {
             sourceCodeTextBox.Text = code;

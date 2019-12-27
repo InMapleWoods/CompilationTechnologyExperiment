@@ -45,9 +45,9 @@
             this.SyntaxToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.ShowSyntaxtoolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.GenerateAssemblyCodeStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.GenerateCodetoolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.CodetoolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.SaveCodetoolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.CodetoolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.GenerateCodetoolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openSourceFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.mainMenuStrip.SuspendLayout();
@@ -82,33 +82,33 @@
             // NewFileStripMenuItem
             // 
             this.NewFileStripMenuItem.Name = "NewFileStripMenuItem";
-            this.NewFileStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.NewFileStripMenuItem.Size = new System.Drawing.Size(122, 26);
             this.NewFileStripMenuItem.Text = "新建";
             this.NewFileStripMenuItem.Click += new System.EventHandler(this.NewFileStripMenuItem_Click);
             // 
             // OpenStripMenuItem
             // 
             this.OpenStripMenuItem.Name = "OpenStripMenuItem";
-            this.OpenStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.OpenStripMenuItem.Size = new System.Drawing.Size(122, 26);
             this.OpenStripMenuItem.Text = "打开";
             this.OpenStripMenuItem.Click += new System.EventHandler(this.OpenStripMenuItem_Click);
             // 
             // SaveSourceStripMenuItem
             // 
             this.SaveSourceStripMenuItem.Name = "SaveSourceStripMenuItem";
-            this.SaveSourceStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.SaveSourceStripMenuItem.Size = new System.Drawing.Size(122, 26);
             this.SaveSourceStripMenuItem.Text = "保存";
             this.SaveSourceStripMenuItem.Click += new System.EventHandler(this.SaveSourceStripMenuItem_Click);
             // 
             // MaintoolStripSeparator1
             // 
             this.MaintoolStripSeparator1.Name = "MaintoolStripSeparator1";
-            this.MaintoolStripSeparator1.Size = new System.Drawing.Size(221, 6);
+            this.MaintoolStripSeparator1.Size = new System.Drawing.Size(119, 6);
             // 
             // ExitStripMenuItem
             // 
             this.ExitStripMenuItem.Name = "ExitStripMenuItem";
-            this.ExitStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.ExitStripMenuItem.Size = new System.Drawing.Size(122, 26);
             this.ExitStripMenuItem.Text = "退出";
             this.ExitStripMenuItem.Click += new System.EventHandler(this.ExitStripMenuItem_Click);
             // 
@@ -125,19 +125,19 @@
             // AnalysisStripMenuItem
             // 
             this.AnalysisStripMenuItem.Name = "AnalysisStripMenuItem";
-            this.AnalysisStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.AnalysisStripMenuItem.Size = new System.Drawing.Size(212, 26);
             this.AnalysisStripMenuItem.Text = "保存分析结果";
             this.AnalysisStripMenuItem.Click += new System.EventHandler(this.AnalysisStripMenuItem_Click);
             // 
             // FileScannerStripSeparator
             // 
             this.FileScannerStripSeparator.Name = "FileScannerStripSeparator";
-            this.FileScannerStripSeparator.Size = new System.Drawing.Size(221, 6);
+            this.FileScannerStripSeparator.Size = new System.Drawing.Size(209, 6);
             // 
             // ShowStripMenuItem
             // 
             this.ShowStripMenuItem.Name = "ShowStripMenuItem";
-            this.ShowStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.ShowStripMenuItem.Size = new System.Drawing.Size(212, 26);
             this.ShowStripMenuItem.Text = "显示词法分析结果";
             this.ShowStripMenuItem.Click += new System.EventHandler(this.ShowStripMenuItem_Click);
             // 
@@ -180,24 +180,24 @@
             this.GenerateAssemblyCodeStripMenuItem.Size = new System.Drawing.Size(113, 24);
             this.GenerateAssemblyCodeStripMenuItem.Text = "目标代码生成";
             // 
-            // GenerateCodetoolStripMenuItem
+            // SaveCodetoolStripMenuItem
             // 
-            this.GenerateCodetoolStripMenuItem.Name = "GenerateCodetoolStripMenuItem";
-            this.GenerateCodetoolStripMenuItem.Size = new System.Drawing.Size(224, 26);
-            this.GenerateCodetoolStripMenuItem.Text = "显示生成代码";
-            this.GenerateCodetoolStripMenuItem.Click += new System.EventHandler(this.GenerateCodetoolStripMenuItem_Click);
+            this.SaveCodetoolStripMenuItem.Name = "SaveCodetoolStripMenuItem";
+            this.SaveCodetoolStripMenuItem.Size = new System.Drawing.Size(182, 26);
+            this.SaveCodetoolStripMenuItem.Text = "保存目标代码";
+            this.SaveCodetoolStripMenuItem.Click += new System.EventHandler(this.SaveCodetoolStripMenuItem_Click);
             // 
             // CodetoolStripSeparator
             // 
             this.CodetoolStripSeparator.Name = "CodetoolStripSeparator";
-            this.CodetoolStripSeparator.Size = new System.Drawing.Size(221, 6);
+            this.CodetoolStripSeparator.Size = new System.Drawing.Size(179, 6);
             // 
-            // SaveCodetoolStripMenuItem
+            // GenerateCodetoolStripMenuItem
             // 
-            this.SaveCodetoolStripMenuItem.Name = "SaveCodetoolStripMenuItem";
-            this.SaveCodetoolStripMenuItem.Size = new System.Drawing.Size(224, 26);
-            this.SaveCodetoolStripMenuItem.Text = "保存目标代码";
-            this.SaveCodetoolStripMenuItem.Click += new System.EventHandler(this.SaveCodetoolStripMenuItem_Click);
+            this.GenerateCodetoolStripMenuItem.Name = "GenerateCodetoolStripMenuItem";
+            this.GenerateCodetoolStripMenuItem.Size = new System.Drawing.Size(182, 26);
+            this.GenerateCodetoolStripMenuItem.Text = "显示生成代码";
+            this.GenerateCodetoolStripMenuItem.Click += new System.EventHandler(this.GenerateCodetoolStripMenuItem_Click);
             // 
             // openSourceFileDialog
             // 
