@@ -1,6 +1,6 @@
 ﻿namespace UI_CompilationTechnology
 {
-    partial class GenerateCodeForm
+    partial class ErrorForm
     {
         /// <summary>
         /// Required designer variable.
@@ -34,7 +34,7 @@
             // sourceCodeTextBox
             // 
             this.sourceCodeTextBox.AcceptsTab = true;
-            this.sourceCodeTextBox.BackColor = System.Drawing.Color.MistyRose;
+            this.sourceCodeTextBox.BackColor = System.Drawing.Color.LightGray;
             this.sourceCodeTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.sourceCodeTextBox.Font = new System.Drawing.Font("Cascadia Code", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.sourceCodeTextBox.Location = new System.Drawing.Point(0, 0);
@@ -45,17 +45,17 @@
             this.sourceCodeTextBox.Size = new System.Drawing.Size(800, 450);
             this.sourceCodeTextBox.TabIndex = 0;
             // 
-            // GenerateCodeForm
+            // ErrorForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.sourceCodeTextBox);
-            this.Name = "GenerateCodeForm";
+            this.Name = "ErrorForm";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.GenerateCodeForm_FormClosing);
-            this.Load += new System.EventHandler(this.GenerateCodeForm_Load);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ErrorForm_FormClosing);
+            this.Load += new System.EventHandler(this.ErrorForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

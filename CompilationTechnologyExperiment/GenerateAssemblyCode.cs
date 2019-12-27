@@ -15,6 +15,11 @@ namespace CompilationTechnologyExperiment
         private static int lineIndex = 0;
 
         /// <summary>
+        /// 错误
+        /// </summary>
+        public static string error = "";
+
+        /// <summary>
         /// 四元式数组
         /// </summary>
         private static List<QuaternaryFormula> formulas = new List<QuaternaryFormula>();
@@ -74,7 +79,7 @@ namespace CompilationTechnologyExperiment
                     else
                     {
                         str += "\t";
-                        if (a.PR.Length==0)
+                        if (a.PR.Length == 0)
                         {
                             str += a.Op + " " + a.PL + "\r\n";
                         }
@@ -94,26 +99,35 @@ namespace CompilationTechnologyExperiment
         /// <summary>
         /// 目标代码生成函数
         /// </summary>
-        public static void GenerateCode(List<QuaternaryFormula> formulas, List<Symbol> symbols, List<int[]> basicBlock)
+        public static bool GenerateCode(List<QuaternaryFormula> formulas, List<Symbol> symbols, List<int[]> basicBlock)
         {
-            lineIndex = 0;
-            assemblys.Clear();
-            GenerateAssemblyCode.formulas = formulas;
-            GenerateAssemblyCode.symbols = symbols;
-            //遍历每一个基本块
-            foreach (var block in basicBlock)
+            try
             {
-                WaitClear();
-                var f = (from i in formulas
-                         where formulas.IndexOf(i) >= block[0] && formulas.IndexOf(i) <= block[1]
-                         select i).ToList();
+                lineIndex = 0;
+                assemblys.Clear();
+                GenerateAssemblyCode.formulas = formulas;
+                GenerateAssemblyCode.symbols = symbols;
+                //遍历每一个基本块
+                foreach (var block in basicBlock)
+                {
+                    WaitClear();
+                    var f = (from i in formulas
+                             where formulas.IndexOf(i) >= block[0] && formulas.IndexOf(i) <= block[1]
+                             select i).ToList();
 
-                List<KeyValuePair<int, string[]>> formulasAppendInformation = new List<KeyValuePair<int, string[]>>();
-                CalWaitOrActiveArray(symbols, f, formulasAppendInformation);
-                GenerateAssemblyCode.formulasAppendInformation = formulasAppendInformation;
-                Translate(f);
+                    List<KeyValuePair<int, string[]>> formulasAppendInformation = new List<KeyValuePair<int, string[]>>();
+                    CalWaitOrActiveArray(symbols, f, formulasAppendInformation);
+                    GenerateAssemblyCode.formulasAppendInformation = formulasAppendInformation;
+                    Translate(f);
+                }
+                System.IO.File.WriteAllText("AssemblyCode.txt", GetAssembly());
+                return true;
             }
-            System.IO.File.WriteAllText("AssemblyCode.txt", GetAssembly());
+            catch (ErrorException e)
+            {
+                error = e.Message;
+                return false;
+            }
         }
 
         /// <summary>

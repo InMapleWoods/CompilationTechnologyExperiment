@@ -11,10 +11,12 @@ namespace UI_CompilationTechnology
         public static bool isshowFileAnalysisForm = false;
         public static bool isshowSyntaxAnalysisForm = false;
         public static bool isshowGenerateCodeForm = false;
+        public static bool isshowErrorForm = false;
         private SourceCodeForm sourceCodeForm = null;
         private FileAnalysisForm fileAnalysisForm = null;
         private SyntaxAnalysisForm syntaxAnalysisForm = null;
         private GenerateCodeForm generateCodeForm = null;
+        private ErrorForm errorForm = null;
         public MainForm()
         {
             InitializeComponent();
@@ -120,17 +122,34 @@ namespace UI_CompilationTechnology
                 FileScanner.GetTokens(values);
                 FileScanner.GetSymbols();
                 SyntaxAnalysis.AnalysisResult(FileScanner.tokens, FileScanner.symbols);
-                GenerateAssemblyCode.GenerateCode(SyntaxAnalysis.formulas, SyntaxAnalysis.symbols, SyntaxAnalysis.basicBlock);
-                var generateCodeResult = GenerateAssemblyCode.GetAssembly();
-                if (!isshowGenerateCodeForm)
+                var res=GenerateAssemblyCode.GenerateCode(SyntaxAnalysis.formulas, SyntaxAnalysis.symbols, SyntaxAnalysis.basicBlock);
+                if (res)
                 {
-                    generateCodeForm = new GenerateCodeForm(generateCodeResult);
-                    generateCodeForm.MdiParent = this;
-                    generateCodeForm.Show();
+                    var generateCodeResult = GenerateAssemblyCode.GetAssembly();
+                    if (!isshowGenerateCodeForm)
+                    {
+                        generateCodeForm = new GenerateCodeForm(generateCodeResult);
+                        generateCodeForm.MdiParent = this;
+                        generateCodeForm.Show();
+                    }
+                    else
+                    {
+                        generateCodeForm.SetCode(generateCodeResult);
+                    }
                 }
                 else
                 {
-                    generateCodeForm.SetCode(generateCodeResult);
+                    MessageBox.Show("目标代码生成发生错误");
+                    if (!isshowErrorForm)
+                    {
+                        errorForm = new ErrorForm(GenerateAssemblyCode.error);
+                        errorForm.MdiParent = this;
+                        errorForm.Show();
+                    }
+                    else
+                    {
+                        errorForm.SetCode(GenerateAssemblyCode.error);
+                    }
                 }
             }
         }
@@ -149,15 +168,34 @@ namespace UI_CompilationTechnology
                 FileScanner.GetTokens(values);
                 FileScanner.GetSymbols();
                 string scannerResult = FileScanner.GetTokenFile(FileScanner.tokens);
-                if (!isshowFileAnalysisForm)
+                FileScanner.error = FileScanner.error.Substring(0, FileScanner.error.Length - 1);
+                if (!string.IsNullOrEmpty(FileScanner.error))
+                    FileScanner.error += "]";
+                if (FileScanner.error.Length == 0)
                 {
-                    fileAnalysisForm = new FileAnalysisForm(scannerResult);
-                    fileAnalysisForm.MdiParent = this;
-                    fileAnalysisForm.Show();
+                    if (!isshowFileAnalysisForm)
+                    {
+                        fileAnalysisForm = new FileAnalysisForm(scannerResult);
+                        fileAnalysisForm.MdiParent = this;
+                        fileAnalysisForm.Show();
+                    }
+                    else
+                    {
+                        fileAnalysisForm.SetCode(scannerResult);
+                    }
                 }
                 else
                 {
-                    fileAnalysisForm.SetCode(scannerResult);
+                    if (!isshowErrorForm)
+                    {
+                        errorForm = new ErrorForm(FileScanner.error);
+                        errorForm.MdiParent = this;
+                        errorForm.Show();
+                    }
+                    else
+                    {
+                        errorForm.SetCode(FileScanner.error);
+                    }
                 }
             }
         }
@@ -193,7 +231,16 @@ namespace UI_CompilationTechnology
                 else
                 {
                     MessageBox.Show("语法分析出错");
-                    Console.WriteLine(SyntaxAnalysis.GetErrorMessage());
+                    if (!isshowErrorForm)
+                    {
+                        errorForm = new ErrorForm(SyntaxAnalysis.GetErrorMessage());
+                        errorForm.MdiParent = this;
+                        errorForm.Show();
+                    }
+                    else
+                    {
+                        errorForm.SetCode(SyntaxAnalysis.GetErrorMessage());
+                    }
                 }
             }
         }

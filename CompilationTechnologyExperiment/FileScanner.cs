@@ -11,7 +11,7 @@ namespace CompilationTechnologyExperiment
     {
         public static List<Token> tokens { get; set; } = new List<Token>();
         public static List<Symbol> symbols { get; set; } = new List<Symbol>();
-        private static string error = "";
+        public static string error = "";
         private static int count = 0;
         /// <summary>
         /// 获取文件内容并识别
@@ -221,7 +221,7 @@ namespace CompilationTechnologyExperiment
                             result.Add(new KeyValuePair<string, int>(number, 42));
                         }
                         builder.Clear();
-                        if (input[index + 1] != ';')
+                        if (Tools.IsBelongToSeparatorsOrOperators(input,index + 1))
                         {
                             error += "[\"" + ErrorMessageResource.IdStartWithNumber + "\",\"" + input.Substring(start, Tools.MoveToRowEnd(input, index) - start) + "\"],";
                         }

@@ -3,25 +3,25 @@ using System.Windows.Forms;
 
 namespace UI_CompilationTechnology
 {
-    public partial class GenerateCodeForm : Form
+    public partial class ErrorForm : Form
     {
-        public GenerateCodeForm()
+        public ErrorForm()
         {
             InitializeComponent();
         }
-        public GenerateCodeForm(string code)
+        public ErrorForm(string code)
         {
             InitializeComponent();
             sourceCodeTextBox.Text = code;
             sourceCodeTextBox.Select(0, 0);
         }
 
-        private void GenerateCodeForm_FormClosing(object sender, FormClosingEventArgs e)
+        private void ErrorForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             MainForm.isshowGenerateCodeForm = false;
         }
 
-        private void GenerateCodeForm_Load(object sender, EventArgs e)
+        private void ErrorForm_Load(object sender, EventArgs e)
         {
             MainForm.isshowGenerateCodeForm = true;
         }
