@@ -62,9 +62,9 @@ namespace UI_CompilationTechnology
 
         private void SaveSourceStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            if (isshowSourceCodeForm)
             {
-                if (isshowSourceCodeForm)
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     File.WriteAllText(saveFileDialog.FileName, sourceCodeForm.GetCode());
                     MessageBox.Show("保存成功");
@@ -74,11 +74,12 @@ namespace UI_CompilationTechnology
 
         private void AnalysisStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            if (isshowFileAnalysisForm)
             {
-                if (isshowFileAnalysisForm)
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    File.WriteAllText(saveFileDialog.FileName, fileAnalysisForm.GetCode());
+                    File.WriteAllText(saveFileDialog.FileName+"Token", fileAnalysisForm.GetCode());
+                    File.WriteAllText(saveFileDialog.FileName+"Symbol", fileAnalysisForm.fileAnalysis.GetCode());
                     MessageBox.Show("保存成功");
                 }
             }
@@ -86,9 +87,9 @@ namespace UI_CompilationTechnology
 
         private void SaveResultStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            if (isshowSyntaxAnalysisForm)
             {
-                if (isshowSyntaxAnalysisForm)
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     File.WriteAllText(saveFileDialog.FileName, syntaxAnalysisForm.GetCode());
                     MessageBox.Show("保存成功");
@@ -97,9 +98,9 @@ namespace UI_CompilationTechnology
         }
         private void SaveCodetoolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            if (isshowGenerateCodeForm)
             {
-                if (isshowGenerateCodeForm)
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     File.WriteAllText(saveFileDialog.FileName, generateCodeForm.GetCode());
                     MessageBox.Show("保存成功");
@@ -125,7 +126,7 @@ namespace UI_CompilationTechnology
                 SyntaxAnalysis syntaxAnalysis = new SyntaxAnalysis();
                 syntaxAnalysis.AnalysisResult(fileScanner.tokens, fileScanner.symbols);
                 GenerateAssemblyCode generateAssemblyCode = new GenerateAssemblyCode();
-                var res= generateAssemblyCode.GenerateCode(syntaxAnalysis.formulas, syntaxAnalysis.symbols, syntaxAnalysis.basicBlock);
+                var res = generateAssemblyCode.GenerateCode(syntaxAnalysis.formulas, syntaxAnalysis.symbols, syntaxAnalysis.basicBlock);
                 if (res)
                 {
                     var generateCodeResult = generateAssemblyCode.GetAssembly();
