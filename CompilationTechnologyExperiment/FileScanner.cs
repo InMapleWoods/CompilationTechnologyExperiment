@@ -221,7 +221,7 @@ namespace CompilationTechnologyExperiment
                             result.Add(new KeyValuePair<string, int>(number, 42));
                         }
                         builder.Clear();
-                        if (Tools.IsBelongToSeparatorsOrOperators(input,index + 1))
+                        if (!Tools.IsBelongToSeparatorsOrOperators(input,index + 1))
                         {
                             error += "[\"" + ErrorMessageResource.IdStartWithNumber + "\",\"" + input.Substring(start, Tools.MoveToRowEnd(input, index) - start) + "\"],";
                         }

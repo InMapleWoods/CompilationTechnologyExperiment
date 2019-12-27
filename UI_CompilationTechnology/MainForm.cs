@@ -168,9 +168,6 @@ namespace UI_CompilationTechnology
                 FileScanner.GetTokens(values);
                 FileScanner.GetSymbols();
                 string scannerResult = FileScanner.GetTokenFile(FileScanner.tokens);
-                FileScanner.error = FileScanner.error.Substring(0, FileScanner.error.Length - 1);
-                if (!string.IsNullOrEmpty(FileScanner.error))
-                    FileScanner.error += "]";
                 if (FileScanner.error.Length == 0)
                 {
                     if (!isshowFileAnalysisForm)
@@ -186,6 +183,9 @@ namespace UI_CompilationTechnology
                 }
                 else
                 {
+                    FileScanner.error = FileScanner.error.Substring(0, FileScanner.error.Length - 1);
+                    if (!string.IsNullOrEmpty(FileScanner.error))
+                        FileScanner.error += "]";
                     if (!isshowErrorForm)
                     {
                         errorForm = new ErrorForm(FileScanner.error);
