@@ -78,8 +78,8 @@ namespace UI_CompilationTechnology
             {
                 if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    File.WriteAllText(saveFileDialog.FileName+"Token", fileAnalysisForm.GetCode());
-                    File.WriteAllText(saveFileDialog.FileName+"Symbol", fileAnalysisForm.fileAnalysis.GetCode());
+                    File.WriteAllText(saveFileDialog.FileName + "Token", fileAnalysisForm.GetCode());
+                    File.WriteAllText(saveFileDialog.FileName + "Symbol", fileAnalysisForm.fileAnalysis.GetCode());
                     MessageBox.Show("保存成功");
                 }
             }
@@ -167,7 +167,7 @@ namespace UI_CompilationTechnology
         {
             if (isshowSourceCodeForm)
             {
-                string sourceCode = sourceCodeForm.GetCode();
+                string sourceCode = sourceCodeForm.GetCode() + "\r\n";
                 FileScanner fileScanner = new FileScanner();
                 var values = fileScanner.GetContentKeyValues(fileScanner.ProcessContent(sourceCode));
                 fileScanner.GetTokens(values);
