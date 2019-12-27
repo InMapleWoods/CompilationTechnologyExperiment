@@ -96,6 +96,8 @@ namespace CompilationTechnologyExperiment
         /// </summary>
         public static void GenerateCode(List<QuaternaryFormula> formulas, List<Symbol> symbols, List<int[]> basicBlock)
         {
+            lineIndex = 0;
+            assemblys.Clear();
             GenerateAssemblyCode.formulas = formulas;
             GenerateAssemblyCode.symbols = symbols;
             //遍历每一个基本块

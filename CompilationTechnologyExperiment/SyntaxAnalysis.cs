@@ -88,6 +88,7 @@ namespace CompilationTechnologyExperiment
                 }
                 #endregion
                 #region 确定基本块
+                basicBlock.Clear();
                 int start = 0;
                 for (int i = 1; i < formulas.Count; i++)
                 {

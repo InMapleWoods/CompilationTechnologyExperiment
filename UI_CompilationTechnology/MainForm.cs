@@ -108,14 +108,19 @@ namespace UI_CompilationTechnology
 
         private void GenerateCodetoolStripMenuItem_Click(object sender, EventArgs e)
         {
+            GenerateCode();
+        }
+
+        public void GenerateCode()
+        {
             if (isshowSourceCodeForm)
             {
                 string sourceCode = sourceCodeForm.GetCode();
                 var values = FileScanner.GetContentKeyValues(FileScanner.ProcessContent(sourceCode));
                 FileScanner.GetTokens(values);
-                FileScanner.GetSymbols(); 
+                FileScanner.GetSymbols();
                 SyntaxAnalysis.AnalysisResult(FileScanner.tokens, FileScanner.symbols);
-                GenerateAssemblyCode.GenerateCode(SyntaxAnalysis.formulas, SyntaxAnalysis.symbols,SyntaxAnalysis.basicBlock);
+                GenerateAssemblyCode.GenerateCode(SyntaxAnalysis.formulas, SyntaxAnalysis.symbols, SyntaxAnalysis.basicBlock);
                 var generateCodeResult = GenerateAssemblyCode.GetAssembly();
                 if (!isshowGenerateCodeForm)
                 {
@@ -131,6 +136,11 @@ namespace UI_CompilationTechnology
         }
 
         private void ShowStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FileScan();
+        }
+
+        public void FileScan()
         {
             if (isshowSourceCodeForm)
             {
@@ -150,10 +160,14 @@ namespace UI_CompilationTechnology
                     fileAnalysisForm.SetCode(scannerResult);
                 }
             }
-
         }
 
         private void ShowSyntaxtoolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AnalysisSyntax();
+        }
+
+        public void AnalysisSyntax()
         {
             if (isshowSourceCodeForm)
             {
@@ -165,23 +179,23 @@ namespace UI_CompilationTechnology
                 if (syntaxAnalysisResult)
                 {
                     MessageBox.Show("语法分析通过");
+                    if (!isshowSyntaxAnalysisForm)
+                    {
+                        syntaxAnalysisForm = new SyntaxAnalysisForm(SyntaxAnalysis.GetQuaternaryFormulaFile(SyntaxAnalysis.formulas));
+                        syntaxAnalysisForm.MdiParent = this;
+                        syntaxAnalysisForm.Show();
+                    }
+                    else
+                    {
+                        syntaxAnalysisForm.SetCode(SyntaxAnalysis.GetQuaternaryFormulaFile(SyntaxAnalysis.formulas));
+                    }
                 }
                 else
                 {
+                    MessageBox.Show("语法分析出错");
                     Console.WriteLine(SyntaxAnalysis.GetErrorMessage());
-                }
-                if (!isshowSyntaxAnalysisForm)
-                {
-                    syntaxAnalysisForm = new SyntaxAnalysisForm(SyntaxAnalysis.GetQuaternaryFormulaFile(SyntaxAnalysis.formulas));
-                    syntaxAnalysisForm.MdiParent = this;
-                    syntaxAnalysisForm.Show();
-                }
-                else
-                {
-                    syntaxAnalysisForm.SetCode(SyntaxAnalysis.GetQuaternaryFormulaFile(SyntaxAnalysis.formulas));
                 }
             }
         }
-
     }
 }

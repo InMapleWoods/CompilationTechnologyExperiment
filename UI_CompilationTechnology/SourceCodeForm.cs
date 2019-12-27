@@ -35,5 +35,29 @@ namespace UI_CompilationTechnology
         {
             return sourceCodeTextBox.Text;
         }
+
+        private void FileScannerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (MdiParent is MainForm)
+            {
+                ((MainForm)MdiParent).FileScan();
+            }
+        }
+
+        private void SyntaxAnalysisToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (MdiParent is MainForm)
+            {
+                ((MainForm)MdiParent).AnalysisSyntax();
+            }
+        }
+
+        private void GenerateCodeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (MdiParent is MainForm)
+            {
+                ((MainForm)MdiParent).GenerateCode();
+            }
+        }
     }
 }

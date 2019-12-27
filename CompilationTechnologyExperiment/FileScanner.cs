@@ -423,6 +423,8 @@ namespace CompilationTechnologyExperiment
         {
             try
             {
+                tokens.Clear();
+                symbols.Clear() ;
                 if (values == null)
                 {
                     return;
