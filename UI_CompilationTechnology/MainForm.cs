@@ -118,14 +118,17 @@ namespace UI_CompilationTechnology
             if (isshowSourceCodeForm)
             {
                 string sourceCode = sourceCodeForm.GetCode();
-                var values = FileScanner.GetContentKeyValues(FileScanner.ProcessContent(sourceCode));
-                FileScanner.GetTokens(values);
-                FileScanner.GetSymbols();
-                SyntaxAnalysis.AnalysisResult(FileScanner.tokens, FileScanner.symbols);
-                var res=GenerateAssemblyCode.GenerateCode(SyntaxAnalysis.formulas, SyntaxAnalysis.symbols, SyntaxAnalysis.basicBlock);
+                FileScanner fileScanner = new FileScanner();
+                var values = fileScanner.GetContentKeyValues(fileScanner.ProcessContent(sourceCode));
+                fileScanner.GetTokens(values);
+                fileScanner.GetSymbols();
+                SyntaxAnalysis syntaxAnalysis = new SyntaxAnalysis();
+                syntaxAnalysis.AnalysisResult(fileScanner.tokens, fileScanner.symbols);
+                GenerateAssemblyCode generateAssemblyCode = new GenerateAssemblyCode();
+                var res= generateAssemblyCode.GenerateCode(syntaxAnalysis.formulas, syntaxAnalysis.symbols, syntaxAnalysis.basicBlock);
                 if (res)
                 {
-                    var generateCodeResult = GenerateAssemblyCode.GetAssembly();
+                    var generateCodeResult = generateAssemblyCode.GetAssembly();
                     if (!isshowGenerateCodeForm)
                     {
                         generateCodeForm = new GenerateCodeForm(generateCodeResult);
@@ -142,13 +145,13 @@ namespace UI_CompilationTechnology
                     MessageBox.Show("目标代码生成发生错误");
                     if (!isshowErrorForm)
                     {
-                        errorForm = new ErrorForm(GenerateAssemblyCode.error);
+                        errorForm = new ErrorForm(generateAssemblyCode.error);
                         errorForm.MdiParent = this;
                         errorForm.Show();
                     }
                     else
                     {
-                        errorForm.SetCode(GenerateAssemblyCode.error);
+                        errorForm.SetCode(generateAssemblyCode.error);
                     }
                 }
             }
@@ -164,11 +167,12 @@ namespace UI_CompilationTechnology
             if (isshowSourceCodeForm)
             {
                 string sourceCode = sourceCodeForm.GetCode();
-                var values = FileScanner.GetContentKeyValues(FileScanner.ProcessContent(sourceCode));
-                FileScanner.GetTokens(values);
-                FileScanner.GetSymbols();
-                string scannerResult = FileScanner.GetTokenFile(FileScanner.tokens);
-                if (FileScanner.error.Length == 0)
+                FileScanner fileScanner = new FileScanner();
+                var values = fileScanner.GetContentKeyValues(fileScanner.ProcessContent(sourceCode));
+                fileScanner.GetTokens(values);
+                fileScanner.GetSymbols();
+                string scannerResult = fileScanner.GetTokenFile(fileScanner.tokens);
+                if (fileScanner.error.Length == 0)
                 {
                     if (!isshowFileAnalysisForm)
                     {
@@ -183,18 +187,18 @@ namespace UI_CompilationTechnology
                 }
                 else
                 {
-                    FileScanner.error = FileScanner.error.Substring(0, FileScanner.error.Length - 1);
-                    if (!string.IsNullOrEmpty(FileScanner.error))
-                        FileScanner.error += "]";
+                    fileScanner.error = fileScanner.error.Substring(0, fileScanner.error.Length - 1);
+                    if (!string.IsNullOrEmpty(fileScanner.error))
+                        fileScanner.error += "]";
                     if (!isshowErrorForm)
                     {
-                        errorForm = new ErrorForm(FileScanner.error);
+                        errorForm = new ErrorForm(fileScanner.error);
                         errorForm.MdiParent = this;
                         errorForm.Show();
                     }
                     else
                     {
-                        errorForm.SetCode(FileScanner.error);
+                        errorForm.SetCode(fileScanner.error);
                     }
                 }
             }
@@ -210,22 +214,24 @@ namespace UI_CompilationTechnology
             if (isshowSourceCodeForm)
             {
                 string sourceCode = sourceCodeForm.GetCode();
-                var values = FileScanner.GetContentKeyValues(FileScanner.ProcessContent(sourceCode));
-                FileScanner.GetTokens(values);
-                FileScanner.GetSymbols();
-                var syntaxAnalysisResult = SyntaxAnalysis.AnalysisResult(FileScanner.tokens, FileScanner.symbols);
+                FileScanner fileScanner = new FileScanner();
+                var values = fileScanner.GetContentKeyValues(fileScanner.ProcessContent(sourceCode));
+                fileScanner.GetTokens(values);
+                fileScanner.GetSymbols();
+                SyntaxAnalysis syntaxAnalysis = new SyntaxAnalysis();
+                var syntaxAnalysisResult = syntaxAnalysis.AnalysisResult(fileScanner.tokens, fileScanner.symbols);
                 if (syntaxAnalysisResult)
                 {
                     MessageBox.Show("语法分析通过");
                     if (!isshowSyntaxAnalysisForm)
                     {
-                        syntaxAnalysisForm = new SyntaxAnalysisForm(SyntaxAnalysis.GetQuaternaryFormulaFile(SyntaxAnalysis.formulas));
+                        syntaxAnalysisForm = new SyntaxAnalysisForm(syntaxAnalysis.GetQuaternaryFormulaFile(syntaxAnalysis.formulas));
                         syntaxAnalysisForm.MdiParent = this;
                         syntaxAnalysisForm.Show();
                     }
                     else
                     {
-                        syntaxAnalysisForm.SetCode(SyntaxAnalysis.GetQuaternaryFormulaFile(SyntaxAnalysis.formulas));
+                        syntaxAnalysisForm.SetCode(syntaxAnalysis.GetQuaternaryFormulaFile(syntaxAnalysis.formulas));
                     }
                 }
                 else
@@ -233,13 +239,13 @@ namespace UI_CompilationTechnology
                     MessageBox.Show("语法分析出错");
                     if (!isshowErrorForm)
                     {
-                        errorForm = new ErrorForm(SyntaxAnalysis.GetErrorMessage());
+                        errorForm = new ErrorForm(syntaxAnalysis.GetErrorMessage());
                         errorForm.MdiParent = this;
                         errorForm.Show();
                     }
                     else
                     {
-                        errorForm.SetCode(SyntaxAnalysis.GetErrorMessage());
+                        errorForm.SetCode(syntaxAnalysis.GetErrorMessage());
                     }
                 }
             }

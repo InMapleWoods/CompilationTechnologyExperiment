@@ -6,54 +6,54 @@ namespace CompilationTechnologyExperiment
     /// <summary>
     /// 目标代码生成
     /// </summary>
-    public static class GenerateAssemblyCode
+    public class GenerateAssemblyCode
     {
         #region 变量定义
         /// <summary>
         /// 目标代码生成语句索引
         /// </summary>
-        private static int lineIndex = 0;
+        private int lineIndex = 0;
 
         /// <summary>
         /// 错误
         /// </summary>
-        public static string error = "";
+        public string error = "";
 
         /// <summary>
         /// 四元式数组
         /// </summary>
-        private static List<QuaternaryFormula> formulas = new List<QuaternaryFormula>();
+        private List<QuaternaryFormula> formulas = new List<QuaternaryFormula>();
 
         /// <summary>
         /// 附加在四元式上的待用和活跃信息
         /// </summary>
-        private static List<KeyValuePair<int, string[]>> formulasAppendInformation = new List<KeyValuePair<int, string[]>>();
+        private List<KeyValuePair<int, string[]>> formulasAppendInformation = new List<KeyValuePair<int, string[]>>();
 
         /// <summary>
         /// 符号表
         /// </summary>
-        private static List<Symbol> symbols = new List<Symbol>();
+        private List<Symbol> symbols = new List<Symbol>();
 
         /// <summary>
         /// 汇编代码表
         /// </summary>
-        private static List<Assembly> assemblys = new List<Assembly>();
+        private List<Assembly> assemblys = new List<Assembly>();
 
         /// <summary>
         /// BX寄存器存储的变量
         /// </summary>
-        private static List<string> bx = new List<string>();
+        private List<string> bx = new List<string>();
 
         /// <summary>
         /// DX寄存器存储的变量
         /// </summary>
-        private static List<string> dx = new List<string>();
+        private List<string> dx = new List<string>();
         #endregion
         /// <summary>
         /// 获取汇编代码表文件字符串（JSON格式）
         /// </summary>
         /// <returns>汇编代码表文件字符串</returns>
-        public static string GetAssembly()
+        public string GetAssembly()
         {
             try
             {
@@ -99,14 +99,14 @@ namespace CompilationTechnologyExperiment
         /// <summary>
         /// 目标代码生成函数
         /// </summary>
-        public static bool GenerateCode(List<QuaternaryFormula> formulas, List<Symbol> symbols, List<int[]> basicBlock)
+        public bool GenerateCode(List<QuaternaryFormula> formulas, List<Symbol> symbols, List<int[]> basicBlock)
         {
             try
             {
                 lineIndex = 0;
                 assemblys.Clear();
-                GenerateAssemblyCode.formulas = formulas;
-                GenerateAssemblyCode.symbols = symbols;
+                this.formulas = formulas;
+                this.symbols = symbols;
                 //遍历每一个基本块
                 foreach (var block in basicBlock)
                 {
@@ -117,7 +117,7 @@ namespace CompilationTechnologyExperiment
 
                     List<KeyValuePair<int, string[]>> formulasAppendInformation = new List<KeyValuePair<int, string[]>>();
                     CalWaitOrActiveArray(symbols, f, formulasAppendInformation);
-                    GenerateAssemblyCode.formulasAppendInformation = formulasAppendInformation;
+                    this.formulasAppendInformation = formulasAppendInformation;
                     Translate(f);
                 }
                 System.IO.File.WriteAllText("AssemblyCode.txt", GetAssembly());
@@ -133,7 +133,7 @@ namespace CompilationTechnologyExperiment
         /// <summary>
         /// 清除WAIT数组
         /// </summary>
-        private static void WaitClear()
+        private void WaitClear()
         {
             foreach (Symbol s in symbols)
             {
@@ -147,7 +147,7 @@ namespace CompilationTechnologyExperiment
         /// </summary>
         /// <param name="str">参数名（变量名）</param>
         /// <returns>所占用的寄存器</returns>
-        private static string GetValue(string str)
+        private string GetValue(string str)
         {
             foreach (Symbol s in symbols)
             {
@@ -164,7 +164,7 @@ namespace CompilationTechnologyExperiment
         /// </summary>
         /// <param name="reg">寄存器</param>
         /// <returns>结果</returns>
-        private static string GetNameByReg(List<string> reg)
+        private string GetNameByReg(List<string> reg)
         {
             if (reg == bx)
             {
@@ -185,7 +185,7 @@ namespace CompilationTechnologyExperiment
         /// </summary>
         /// <param name="name">符号名</param>
         /// <returns>结果</returns>
-        private static List<string> GetRegByName(string name)
+        private List<string> GetRegByName(string name)
         {
             if (name == "bx")
             {
@@ -206,7 +206,7 @@ namespace CompilationTechnologyExperiment
         /// </summary>
         /// <param name="name">符号名</param>
         /// <returns>获取Symbol结果</returns>
-        private static List<Symbol> GetSymbol(string name)
+        private List<Symbol> GetSymbol(string name)
         {
             List<Symbol> temp = new List<Symbol>();
             foreach (Symbol symbol in symbols)
@@ -224,7 +224,7 @@ namespace CompilationTechnologyExperiment
         /// </summary>
         /// <param name="formula">四元式</param>
         /// <returns>分配寄存器结果</returns>
-        private static string GetReg(QuaternaryFormula formula)
+        private string GetReg(QuaternaryFormula formula)
         {
             int index = formulas.IndexOf(formula);
             List<Symbol> symbols = GetSymbol(formula.arg1);
@@ -272,7 +272,7 @@ namespace CompilationTechnologyExperiment
         /// <summary>
         /// 待用活跃
         /// </summary>
-        private static bool WaitOrActiveArray(Symbol symbol, int i)
+        private bool WaitOrActiveArray(Symbol symbol, int i)
         {
             string[] info = new string[] { };
             foreach (var fInfo in formulasAppendInformation)
@@ -298,7 +298,7 @@ namespace CompilationTechnologyExperiment
         /// <summary>
         /// 待用表活跃表信息修改
         /// </summary>
-        private static void CalWaitOrActiveArray(List<Symbol> symbols, List<QuaternaryFormula> formulas, List<KeyValuePair<int, string[]>> appendInfo)
+        private void CalWaitOrActiveArray(List<Symbol> symbols, List<QuaternaryFormula> formulas, List<KeyValuePair<int, string[]>> appendInfo)
         {
             foreach (var f in formulas)
             {
@@ -335,7 +335,7 @@ namespace CompilationTechnologyExperiment
         }
 
         #region 产生目标代码
-        private static void Translate(List<QuaternaryFormula> f)
+        private void Translate(List<QuaternaryFormula> f)
         {
 
             foreach (QuaternaryFormula formula in f)

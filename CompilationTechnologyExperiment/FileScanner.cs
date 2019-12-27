@@ -7,18 +7,18 @@ namespace CompilationTechnologyExperiment
     /// <summary>
     /// 扫描器类
     /// </summary>
-    public static partial class FileScanner
+    public partial class FileScanner
     {
-        public static List<Token> tokens { get; set; } = new List<Token>();
-        public static List<Symbol> symbols { get; set; } = new List<Symbol>();
-        public static string error = "";
-        private static int count = 0;
+        public List<Token> tokens { get; set; } = new List<Token>();
+        public List<Symbol> symbols { get; set; } = new List<Symbol>();
+        public string error = "";
+        private int count = 0;
         /// <summary>
         /// 获取文件内容并识别
         /// </summary>
         /// <param name="fileName">文件名</param>
         /// <returns>识别结果</returns>
-        public static string[] ScannerResult(string fileName)
+        public string[] ScannerResult(string fileName)
         {
             count = 0;
             error = "[";
@@ -46,7 +46,7 @@ namespace CompilationTechnologyExperiment
         /// </summary>
         /// <param name="input">输入内容</param>
         /// <returns>处理后结果</returns>
-        public static string ProcessContent(string input)
+        public string ProcessContent(string input)
         {
             //不对空字符串进行处理
             if (string.IsNullOrEmpty(input))
@@ -74,7 +74,7 @@ namespace CompilationTechnologyExperiment
         /// </summary>
         /// <param name="input">输入内容</param>
         /// <returns>单词符号类别和内容</returns>
-        public static List<KeyValuePair<string, int>> GetContentKeyValues(string input)
+        public List<KeyValuePair<string, int>> GetContentKeyValues(string input)
         {
             if (string.IsNullOrEmpty(input))
                 return null;
@@ -127,7 +127,7 @@ namespace CompilationTechnologyExperiment
         /// <param name="index">位置索引</param>
         /// <param name="builder">临时存储变量</param>
         /// <param name="result">返回结果</param>
-        private static bool identifyKeywordOrIdentifier(string input, ref int index, StringBuilder builder, List<KeyValuePair<string, int>> result)
+        private bool identifyKeywordOrIdentifier(string input, ref int index, StringBuilder builder, List<KeyValuePair<string, int>> result)
         {
             int start = index;
             if (char.IsNumber(input[start]))
@@ -175,7 +175,7 @@ namespace CompilationTechnologyExperiment
         /// <param name="index">位置索引</param>
         /// <param name="builder">临时存储变量</param>
         /// <param name="result">返回结果</param>
-        private static bool identifyNumber(string input, ref int index, StringBuilder builder, List<KeyValuePair<string, int>> result)
+        private bool identifyNumber(string input, ref int index, StringBuilder builder, List<KeyValuePair<string, int>> result)
         {
             int start = index;
             bool returnValue = false;
@@ -241,7 +241,7 @@ namespace CompilationTechnologyExperiment
         /// <param name="index">位置索引</param>
         /// <param name="builder">临时存储变量</param>
         /// <param name="result">返回结果</param>
-        private static bool identifyCharacter(string input, ref int index, StringBuilder builder, List<KeyValuePair<string, int>> result)
+        private bool identifyCharacter(string input, ref int index, StringBuilder builder, List<KeyValuePair<string, int>> result)
         {
             bool returnValue = false;
             if (input[index] == '\'')
@@ -267,7 +267,7 @@ namespace CompilationTechnologyExperiment
         /// <param name="index">位置索引</param>
         /// <param name="builder">临时存储变量</param>
         /// <param name="result">返回结果</param>
-        private static bool identifyString(string input, ref int index, StringBuilder builder, List<KeyValuePair<string, int>> result)
+        private bool identifyString(string input, ref int index, StringBuilder builder, List<KeyValuePair<string, int>> result)
         {
             bool returnValue = false;
             if (input[index] == '"')
@@ -294,7 +294,7 @@ namespace CompilationTechnologyExperiment
         /// <param name="index">位置索引</param>
         /// <param name="builder">临时存储变量</param>
         /// <param name="result">返回结果</param>
-        private static bool identifyOperatorsOrSeparators(string input, ref int index, StringBuilder builder, List<KeyValuePair<string, int>> result)
+        private bool identifyOperatorsOrSeparators(string input, ref int index, StringBuilder builder, List<KeyValuePair<string, int>> result)
         {
             bool returnValue = false;
             while (Tools.IsBelongToSeparatorsOrOperators(input, index))
@@ -368,7 +368,7 @@ namespace CompilationTechnologyExperiment
         /// </summary>
         /// <param name="symbols">Symbol表</param>
         /// <returns>符号表文件字符串</returns>
-        public static string GetSymbolFile(List<Symbol> symbols)
+        public string GetSymbolFile(List<Symbol> symbols)
         {
             try
             {
@@ -393,7 +393,7 @@ namespace CompilationTechnologyExperiment
         /// </summary>
         /// <param name="tokens">Token表</param>
         /// <returns>token文件字符串</returns>
-        public static string GetTokenFile(List<Token> tokens)
+        public string GetTokenFile(List<Token> tokens)
         {
             try
             {
@@ -419,7 +419,7 @@ namespace CompilationTechnologyExperiment
         /// </summary>
         /// <param name="values">值表</param>
         /// <returns>token表</returns>
-        public static void GetTokens(List<KeyValuePair<string, int>> values)
+        public void GetTokens(List<KeyValuePair<string, int>> values)
         {
             try
             {
@@ -481,7 +481,7 @@ namespace CompilationTechnologyExperiment
         /// </summary>
         /// <param name="values">值表</param>
         /// <returns>token表</returns>
-        public static void GetSymbols()
+        public void GetSymbols()
         {
             try
             {

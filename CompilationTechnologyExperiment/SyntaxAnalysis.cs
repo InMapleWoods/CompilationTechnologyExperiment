@@ -7,48 +7,48 @@ namespace CompilationTechnologyExperiment
     /// <summary>
     /// 语法分析器类
     /// </summary>
-    public static class SyntaxAnalysis
+    public class SyntaxAnalysis
     {
         #region 变量声明
         /// <summary>
         /// 四元式列表
         /// </summary>
-        public static List<QuaternaryFormula> formulas = new List<QuaternaryFormula>();
+        public List<QuaternaryFormula> formulas = new List<QuaternaryFormula>();
 
         /// <summary>
         /// 基本块始终位置
         /// </summary>
-        public static List<int[]> basicBlock = new List<int[]>();
+        public List<int[]> basicBlock = new List<int[]>();
 
         /// <summary>
         /// 符号表
         /// </summary>
-        public static List<Symbol> symbols = new List<Symbol>();
+        public List<Symbol> symbols = new List<Symbol>();
 
         /// <summary>
         /// 错误信息
         /// </summary>
-        private static string error = "[";
+        private string error = "[";
 
         /// <summary>
         /// Token长度
         /// </summary>
-        private static int tokenLength = 0;
+        private int tokenLength = 0;
 
         /// <summary>
         /// 当前Token的索引
         /// </summary>
-        private static int index = 0;
+        private int index = 0;
 
         /// <summary>
         /// 临时变量索引
         /// </summary>
-        private static int temporaryVariablesIndex = 1;
+        private int temporaryVariablesIndex = 1;
 
         /// <summary>
         /// 临时变量
         /// </summary>
-        private static string temporaryVariables = "";
+        private string temporaryVariables = "";
         #endregion
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace CompilationTechnologyExperiment
         /// </summary>
         /// <param name="formulas">四元式表</param>
         /// <returns>四元式表文件字符串</returns>
-        public static string GetQuaternaryFormulaFile(List<QuaternaryFormula> formulas)
+        public string GetQuaternaryFormulaFile(List<QuaternaryFormula> formulas)
         {
             try
             {
@@ -133,7 +133,7 @@ namespace CompilationTechnologyExperiment
         /// 获取错误信息
         /// </summary>
         /// <returns>错误信息</returns>
-        public static string GetErrorMessage()
+        public string GetErrorMessage()
         {
             error = error.Substring(0, error.Length - 1);
             if (!string.IsNullOrEmpty(error))
@@ -145,7 +145,7 @@ namespace CompilationTechnologyExperiment
         /// 创建新的临时变量
         /// </summary>
         /// <returns></returns>
-        private static string NewTempVariable()
+        private string NewTempVariable()
         {
             string temp = "T" + temporaryVariablesIndex.ToString();
             temporaryVariablesIndex++;
@@ -160,7 +160,7 @@ namespace CompilationTechnologyExperiment
         /// </summary>
         /// <param name="addr">链首</param>
         /// <param name="addr2">地址</param>
-        private static void BackPatch(int addr, int addr2)
+        private void BackPatch(int addr, int addr2)
         {
             formulas[addr].result = addr2.ToString();//把链首addr所链接的每个四元式的第四分量都改写为地址addr2
         }
@@ -172,7 +172,7 @@ namespace CompilationTechnologyExperiment
         /// <param name="arg1">操作数1</param>
         /// <param name="arg2">操作数2</param>
         /// <param name="result">结果</param>
-        private static void Emit(string op, string arg1, string arg2, string result)
+        private void Emit(string op, string arg1, string arg2, string result)
         {
             QuaternaryFormula formula = new QuaternaryFormula(op, arg1, arg2, result);
             formulas.Add(formula);//将新生成的四元式表项formula添加到四元式列表formulas中
@@ -181,7 +181,7 @@ namespace CompilationTechnologyExperiment
         /// <summary>
         /// 后一项
         /// </summary>
-        private static void Next()
+        private void Next()
         {
             if (index < tokenLength - 1)
             {
@@ -192,7 +192,7 @@ namespace CompilationTechnologyExperiment
         /// <summary>
         /// 前一项
         /// </summary>
-        private static void Before()
+        private void Before()
         {
             if (index > 0)
             {
@@ -204,18 +204,18 @@ namespace CompilationTechnologyExperiment
         /// 语法分析
         /// </summary>
         /// <returns>分析结果</returns>
-        public static bool AnalysisResult(List<Token> token, List<Symbol> symbols)
+        public bool AnalysisResult(List<Token> token, List<Symbol> symbols)
         {
-            SyntaxAnalysis.symbols = symbols;
+            this.symbols = symbols;
             //token[0]="real" token[1]=42 token[2]=attr
             tokenLength = token.Count;
             try
             {
                 Proghead(token);
                 Console.WriteLine("语法分析通过");
-                System.IO.File.WriteAllText("Formula.txt", SyntaxAnalysis.GetQuaternaryFormulaFile(formulas));
+                System.IO.File.WriteAllText("Formula.txt", GetQuaternaryFormulaFile(formulas));
                 Console.WriteLine("四元式文件已生成");
-                System.IO.File.WriteAllText("Symbol.txt", FileScanner.GetSymbolFile(SyntaxAnalysis.symbols));
+                System.IO.File.WriteAllText("Symbol.txt", new FileScanner().GetSymbolFile(this.symbols));
                 return true;
             }
             catch (ErrorException e)
@@ -229,7 +229,7 @@ namespace CompilationTechnologyExperiment
         /// 分析程序头
         /// </summary>
         /// <param name="token">Token数组</param>
-        private static void Proghead(List<Token> token)
+        private void Proghead(List<Token> token)
         {
             if (token[index].Code.ToString() == Keywords.PROGRAM)//含有program
             {
@@ -257,7 +257,7 @@ namespace CompilationTechnologyExperiment
         /// 程序体部分（变量说明，复合句）
         /// </summary>
         /// <param name="token">Token数组</param>
-        private static void ProBody(List<Token> token)
+        private void ProBody(List<Token> token)
         {
             if (token[index].Code.ToString() == Keywords.VAR)//如果是var
             {
@@ -280,7 +280,7 @@ namespace CompilationTechnologyExperiment
         /// 变量说明部分:〈变量定义〉→〈标识符表〉：〈类型〉；｜〈标识符表〉：〈类型〉；〈变量定义〉
         /// </summary>
         /// <param name="token">Token数组</param>
-        private static void Varexpl(List<Token> token)
+        private void Varexpl(List<Token> token)
         {
             if (IsIdlist(token))//若该字符为标识符，则判断下一个字符，若为冒号，继续判断类型定义是否正确
             {
@@ -333,7 +333,7 @@ namespace CompilationTechnologyExperiment
         /// 判断是不是标识符表 IsIdlist//〈标识符表〉→〈标识符〉，〈标识符表〉｜〈标识符〉
         /// </summary>
         /// <returns>是不是标识符</returns>
-        private static bool IsIdlist(List<Token> token)
+        private bool IsIdlist(List<Token> token)
         {
             if (token[index].Code.ToString() == Keywords.ID)//标识符
             {//若是标识符，判断下一个字符，如果是逗号，继续判断下一个字符，如果不是逗号，指向前一个字符，返回true，否则返回false——此方法用来判断是否将几个变量定义为同一个类型
@@ -360,7 +360,7 @@ namespace CompilationTechnologyExperiment
         /// 复合语句:begin+语句表+end
         /// </summary>
         /// <param name="token">Token数组</param>
-        private static void Compesent(List<Token> token)
+        private void Compesent(List<Token> token)
         {
             SentList(token);//执行语句表
             if (token[index].Code.ToString() == Keywords.SEM && token[index + 1].Code.ToString() == Keywords.END)//end
@@ -379,7 +379,7 @@ namespace CompilationTechnologyExperiment
         /// 语句表SentList//〈语句表〉→〈执行句〉；〈语句表〉｜〈执行句〉
         /// </summary>
         /// <param name="token">Token数组</param>
-        private static void SentList(List<Token> token)
+        private void SentList(List<Token> token)
         {
             S s = new S();//新建一个产生式符号
             ExecSent(token, ref s);//执行句
@@ -400,7 +400,7 @@ namespace CompilationTechnologyExperiment
         /// </summary>
         /// <param name="token">Token数组</param>
         /// <param name="s">产生式</param>
-        private static void ExecSent(List<Token> token, ref S s)
+        private void ExecSent(List<Token> token, ref S s)
         {
             if (token[index].Code.ToString() == Keywords.ID)//标识符如果是标识符，为简单句
             {
@@ -421,7 +421,7 @@ namespace CompilationTechnologyExperiment
         /// 赋值句AssiSent//〈赋值句〉→〈变量〉：＝〈表达式〉
         /// </summary>
         /// <param name="token">Token数组</param>
-        private static void AssiSent(List<Token> token)
+        private void AssiSent(List<Token> token)
         {
             if (token[index].Code.ToString() == Keywords.FUZHI)//:=
             {
@@ -441,7 +441,7 @@ namespace CompilationTechnologyExperiment
         /// 表达式Expression//〈表达式〉→〈算术表达式〉｜〈布尔表达式〉
         /// </summary>
         /// <param name="token">Token数组</param>
-        private static void Expression(List<Token> token)
+        private void Expression(List<Token> token)
         {
             int symbolIndex = token[index].Addr;
             if (token[index].Code.ToString() == Keywords.FALSE || token[index].Code.ToString() == Keywords.TRUE || (symbolIndex != -1 && symbols[symbolIndex].Type.ToString() == Keywords.布尔型))//false或true或单词为保留字且在符号表中的类型为bool型
@@ -459,7 +459,7 @@ namespace CompilationTechnologyExperiment
         /// 布尔表达式BoolExp//〈布尔表达式〉→〈布尔表达式〉or〈布尔项〉｜〈布尔项〉
         /// </summary>
         /// <param name="token">Token数组</param>
-        private static void BoolExp(List<Token> token, ref E e)
+        private void BoolExp(List<Token> token, ref E e)
         {
             E e1 = new E();
             BoolItem(token, ref e1);//布尔项
@@ -497,7 +497,7 @@ namespace CompilationTechnologyExperiment
         /// 〈布尔项〉→〈布尔项〉and〈布尔因子〉｜〈布尔因子〉
         /// </summary>
         /// <param name="token">Token数组</param>
-        private static void BoolItem(List<Token> token, ref E e)
+        private void BoolItem(List<Token> token, ref E e)
         {
             E e1 = new E();
             BoolFactor(token, ref e1);//布尔因子
@@ -528,7 +528,7 @@ namespace CompilationTechnologyExperiment
         /// 布尔因子BoolFactor//〈布尔因子〉→ not〈布尔因子〉｜〈布尔量〉
         /// </summary>
         /// <param name="token">Token数组</param>
-        private static void BoolFactor(List<Token> token, ref E e)
+        private void BoolFactor(List<Token> token, ref E e)
         {
             if (token[index].Code.ToString() == Keywords.NOT)//not
             {
@@ -550,7 +550,7 @@ namespace CompilationTechnologyExperiment
         /// 布尔量BoolValue//〈布尔量〉→〈布尔常数〉｜〈标识符〉｜（〈布尔表达式〉）｜〈关系表达式〉
         /// </summary>
         /// <param name="token">Token数组</param>
-        private static void BoolValue(List<Token> token, ref E e)
+        private void BoolValue(List<Token> token, ref E e)
         {
             if (token[index].Code.ToString() == Keywords.TRUE || token[index].Code.ToString() == Keywords.FALSE)//true或false
             {
@@ -616,7 +616,7 @@ namespace CompilationTechnologyExperiment
         /// 算术表达式 AritExp//〈算术表达式〉→〈算术表达式〉＋〈项〉｜〈算术表达式〉－〈项〉｜〈项〉
         /// </summary>
         /// <param name="token">Token数组</param>
-        private static void AritExp(List<Token> token)
+        private void AritExp(List<Token> token)
         {
             Item(token);//执行项
             Next();
@@ -643,7 +643,7 @@ namespace CompilationTechnologyExperiment
         /// 项 Item//〈项〉→〈项〉＊〈因子〉｜〈项〉／〈因子〉｜〈因子〉
         /// </summary>
         /// <param name="token">Token数组</param>
-        private static void Item(List<Token> token)
+        private void Item(List<Token> token)
         {
             Factor(token);//执行因子
             Next();
@@ -673,7 +673,7 @@ namespace CompilationTechnologyExperiment
         /// 因子Factor//〈因子〉→〈算术量〉｜（〈算术表达式〉）
         /// </summary>
         /// <param name="token">Token数组</param>
-        private static void Factor(List<Token> token)
+        private void Factor(List<Token> token)
         {
             if (token[index].Code.ToString() == Keywords.LKUOHAO)//字符为（
             {
@@ -700,7 +700,7 @@ namespace CompilationTechnologyExperiment
         /// 算术量CalQua//〈算术量〉→〈标识符〉｜〈整数〉｜〈实数〉
         /// </summary>
         /// <param name="token">Token数组</param>
-        private static void CalQua(List<Token> token)
+        private void CalQua(List<Token> token)
         {
             if (token[index].Code.ToString() == Keywords.ID || token[index].Code.ToString() == Keywords.整型 || token[index].Code.ToString() == Keywords.实型)//标识符或整数或实数
             {
@@ -717,7 +717,7 @@ namespace CompilationTechnologyExperiment
         /// 结构句 StructSent//〈结构句〉→〈复合句〉｜〈if句〉｜〈WHILE句〉
         /// </summary>
         /// <param name="token">Token数组</param>
-        private static void StructSent(List<Token> token, ref S s)
+        private void StructSent(List<Token> token, ref S s)
         {
             if (token[index].Code.ToString() == Keywords.BEGIN)//begin
             {
@@ -740,7 +740,7 @@ namespace CompilationTechnologyExperiment
         /// if语句IfSent// 〈if句〉→if〈布尔表达式〉then〈执行句〉| if〈布尔表达式〉then〈执行句〉else〈执行句〉
         /// </summary>
         /// <param name="token">Token数组</param>
-        private static void IfSent(List<Token> token, ref S s)
+        private void IfSent(List<Token> token, ref S s)
         {
             E e = new E();
             BoolExp(token, ref e);//布尔表达式
@@ -795,7 +795,7 @@ namespace CompilationTechnologyExperiment
         /// while语句 WhileSent//〈while句〉→while〈布尔表达式〉do〈执行句〉
         /// </summary>
         /// <param name="token">Token数组</param>
-        private static void WhileSent(List<Token> token, ref S s)
+        private void WhileSent(List<Token> token, ref S s)
         {
             int m1 = formulas.Count;
             E e = new E();

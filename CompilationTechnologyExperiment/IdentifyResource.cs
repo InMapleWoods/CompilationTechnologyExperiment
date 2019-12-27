@@ -2,7 +2,7 @@
 
 namespace CompilationTechnologyExperiment
 {
-    public static partial class FileScanner
+    public partial class FileScanner
     {
         static readonly Dictionary<string, int> Keywords = new Dictionary<string, int>()
             {
