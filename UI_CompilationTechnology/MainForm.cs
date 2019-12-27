@@ -192,8 +192,13 @@ namespace UI_CompilationTechnology
                 }
                 else
                 {
-                    fileAnalysisForm.fileAnalysis.Close();
-                    fileAnalysisForm.Close();
+                    if (fileAnalysisForm != null)
+                    {
+                        if (fileAnalysisForm.fileAnalysis != null)
+                            fileAnalysisForm.fileAnalysis.Close();
+                    }
+                    if (fileAnalysisForm != null)
+                        fileAnalysisForm.Close();
                     fileScanner.error = fileScanner.error.Substring(0, fileScanner.error.Length - 1);
                     if (!string.IsNullOrEmpty(fileScanner.error))
                         fileScanner.error += "]";
