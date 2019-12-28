@@ -5,7 +5,7 @@ namespace UI_CompilationTechnology
 {
     public partial class FileAnalysisForm : Form
     {
-        public FileAnalysisForm fileAnalysis=new FileAnalysisForm();
+        public FileAnalysisForm fileAnalysis=null;
         public FileAnalysisForm()
         {
             InitializeComponent();

@@ -179,17 +179,68 @@ namespace CompilationTechnologyExperiment
         {
             int start = index;
             bool returnValue = false;
-            bool isDouble = false;
+            bool isDoubleDot = false;
+            bool isDoubleE = false;
             while (char.IsNumber(input[index]))
             {
                 builder.Append(input[index]);
+                if (index + 1 >= input.Length)
+                {
+                    builder.Clear();
+                    error += "[\"未以分号结尾\",\"" + Tools.GetWord(input, index) + "\"],";
+                    return false;
+                }
                 if (!char.IsNumber(input[index + 1]))
                 {
-                    if (input[index + 1] == 'e' || input[index + 1] == 'E' || input[index + 1] == '.')
+                    if (input[index + 1] == 'e' || input[index + 1] == 'E')
                     {
-                        if (!isDouble)
+                        if (index + 2 >= input.Length || ((!char.IsNumber(input[index + 2])) && input[index + 2] != '+' && input[index + 2] != '-'))
                         {
-                            isDouble = true;
+                            string number = builder.ToString();
+                            result.Add(new KeyValuePair<string, int>(number, 42));
+                            builder.Clear();
+                            if (input[index + 2] == '.')
+                            {
+                                error += "[\"实型常数E后存在小数点\",\"" + Tools.GetWord(input, index) + "\"],";
+                            }
+                            else if (input[index + 2] == 'E' || input[index + 2] == 'e')
+                            {
+                                error += "[\"" + ErrorMessageResource.NumberMultiE + "\",\"" + Tools.GetWord(input, index) + "\"],";
+                            }
+                            else
+                            {
+                                error += "[\"实型常数的E后无数字\",\"" + Tools.GetWord(input, index) + "\"],";
+                            }
+                            index = Tools.MoveToRowEnd(input, index) - 1;
+                        }
+                        else
+                        {
+                            if (!isDoubleE)
+                            {
+                                isDoubleE = true;
+                                builder.Append(input[index + 1]);
+                                index = index + 1;
+                                if (input[index + 1] == '+' || input[index + 1] == '-')
+                                {
+                                    builder.Append(input[index + 1]);
+                                    index = index + 1;
+                                }
+                            }
+                            else
+                            {
+                                string number = builder.ToString();
+                                result.Add(new KeyValuePair<string, int>(number, 42));
+                                builder.Clear();
+                                error += "[\"" + ErrorMessageResource.NumberMultiE + "\",\"" + Tools.GetWord(input, index) + "\"],";
+                                index = Tools.MoveToRowEnd(input, index) - 1;
+                            }
+                        }
+                    }
+                    else if (input[index + 1] == '.')
+                    {
+                        if (!isDoubleDot)
+                        {
+                            isDoubleDot = true;
                             builder.Append(input[index + 1]);
                             index = index + 1;
                         }
@@ -198,21 +249,14 @@ namespace CompilationTechnologyExperiment
                             string number = builder.ToString();
                             result.Add(new KeyValuePair<string, int>(number, 42));
                             builder.Clear();
-                            if (input[index + 1] != '.')
-                            {
-                                error += "[\"" + ErrorMessageResource.NumberMultiE + "\",\"" + number + "\"],";
-                            }
-                            else
-                            {
-                                error += "[\"" + ErrorMessageResource.NumberMultiDotError + "\",\"" + input.Substring(start, Tools.MoveToRowEnd(input, index) - start) + "\"],";
-                            }
+                            error += "[\"" + ErrorMessageResource.NumberMultiDotError + "\",\"" + Tools.GetWord(input, index) + "\"],";
                             index = Tools.MoveToRowEnd(input, index) - 1;
                         }
                     }
                     else
                     {
                         string number = builder.ToString();
-                        if (!isDouble)
+                        if (!(isDoubleE || isDoubleDot))
                         {
                             result.Add(new KeyValuePair<string, int>(number, 41));
                         }
@@ -221,7 +265,7 @@ namespace CompilationTechnologyExperiment
                             result.Add(new KeyValuePair<string, int>(number, 42));
                         }
                         builder.Clear();
-                        if (!Tools.IsBelongToSeparatorsOrOperators(input,index + 1))
+                        if (!Tools.IsBelongToSeparatorsOrOperators(input, index + 1))
                         {
                             error += "[\"" + ErrorMessageResource.IdStartWithNumber + "\",\"" + input.Substring(start, Tools.MoveToRowEnd(input, index) - start) + "\"],";
                         }
@@ -424,7 +468,7 @@ namespace CompilationTechnologyExperiment
             try
             {
                 tokens.Clear();
-                symbols.Clear() ;
+                symbols.Clear();
                 if (values == null)
                 {
                     return;
@@ -460,7 +504,7 @@ namespace CompilationTechnologyExperiment
                         symbol.Type = i.Value;
                         symbols.Add(symbol);
                     }
-                    else if (i.Value.ToString() == CompilationTechnologyExperiment.Keywords.TRUE|| i.Value.ToString() == CompilationTechnologyExperiment.Keywords.FALSE)
+                    else if (i.Value.ToString() == CompilationTechnologyExperiment.Keywords.TRUE || i.Value.ToString() == CompilationTechnologyExperiment.Keywords.FALSE)
                     {
                         Symbol symbol = new Symbol();
                         symbol.Number = token.Addr;

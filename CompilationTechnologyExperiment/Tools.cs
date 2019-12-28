@@ -130,6 +130,44 @@ namespace CompilationTechnologyExperiment
         {
             return GetSymbolType(int.Parse(type));
         }
+
+        /// <summary>
+        /// 获取错误位置所在的单词
+        /// </summary>
+        /// <param name="input">源程序</param>
+        /// <param name="index">出错位置</param>
+        /// <returns>出错单词</returns>
+        public static string GetWord(string input, int index)
+        {
+            if (input.Length == 0)
+            {
+                return "";
+            }
+            int start = 0;
+            int end = 0;
+            for (int i = index; i >= 0; i--)
+            {
+                if (IsBelongToSeparatorsOrOperators(input, i) && input[i] != '.')
+                {
+                    start = i + 1;
+                    break;
+                }
+            }
+            for (int i = index; i < input.Length; i++)
+            {
+                if (IsBelongToSeparatorsOrOperators(input, i) && input[i] != '.')
+                {
+                    end = i - 1;
+                    break;
+                }
+            }
+            if (end - start > 0)
+            {
+                return input.Substring(start, end - start);
+            }
+            return "";
+        }
+
         /// <summary>
         /// 获取机内码对应的类型
         /// </summary>
@@ -237,7 +275,7 @@ namespace CompilationTechnologyExperiment
         public Token()
         {
         }
-        public Token(int Label,string Name,int Code,int Addr)
+        public Token(int Label, string Name, int Code, int Addr)
         {
             this.Label = Label;
             this.Name = Name;
@@ -266,12 +304,12 @@ namespace CompilationTechnologyExperiment
         /// <summary>
         /// 待用信息表
         /// </summary>
-        public List<string[]> Wait { set; get; }= new List<string[]>();
+        public List<string[]> Wait { set; get; } = new List<string[]>();
 
         /// <summary>
         /// 寄存器值AVALUE
         /// </summary>
-        public string Value { set; get; } 
+        public string Value { set; get; }
         /// <summary>
         /// 初始化
         /// </summary>
@@ -287,7 +325,7 @@ namespace CompilationTechnologyExperiment
         /// <summary>
         /// 初始化
         /// </summary>
-        public Symbol(int Number,int Type,string Name, List<string[]> Wait,string Value)
+        public Symbol(int Number, int Type, string Name, List<string[]> Wait, string Value)
         {
             this.Number = Number;
             this.Type = Type;
@@ -419,7 +457,7 @@ namespace CompilationTechnologyExperiment
         /// <param name="op">操作符</param>
         /// <param name="pl">操作数1</param>
         /// <param name="pr">操作数2</param>
-        public Assembly(string op, string pl, string pr) 
+        public Assembly(string op, string pl, string pr)
         {
             Op = op;
             PL = pl;
