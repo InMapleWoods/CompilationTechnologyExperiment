@@ -119,9 +119,8 @@ namespace CompilationTechnologyExperiment
                     var f = (from i in formulas
                              where formulas.IndexOf(i) >= block[0] && formulas.IndexOf(i) <= block[1]
                              select i).ToList();
-
                     List<KeyValuePair<int, string[]>> formulasAppendInformation = new List<KeyValuePair<int, string[]>>();
-                    CalWaitOrActiveArray(symbols, f, formulasAppendInformation);
+                    CalWaitOrActiveArray(f, formulasAppendInformation);
                     this.formulasAppendInformation = formulasAppendInformation;
                     Translate(f);
                 }
@@ -303,7 +302,7 @@ namespace CompilationTechnologyExperiment
         /// <summary>
         /// 待用表活跃表信息修改
         /// </summary>
-        private void CalWaitOrActiveArray(List<Symbol> symbols, List<QuaternaryFormula> formulas, List<KeyValuePair<int, string[]>> appendInfo)
+        private void CalWaitOrActiveArray(List<QuaternaryFormula> formulas, List<KeyValuePair<int, string[]>> appendInfo)
         {
             foreach (var f in formulas)
             {
